@@ -1,0 +1,193 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+{% load functions %}
+
+{% include "navbar.html" %}
+
+<form method="POST">{% csrf_token %}
+    <div class="felx py-10">
+        <div class="flex max-w-screen-xl mx-auto py-10 text-white bg-gray-800 bg-opacity-60 rounded-lg">
+            <div class="border-r-2 border-gray-900 px-5 grid grid-rows-2">
+                <div class="flex flex-col pb-2 justify-center mx-auto items-center">
+                    <img src="{{ player.image }}" alt="{{ player.name }}"
+                        class="w-72 object-contain mb-4 rounded-full shadow-2xl">
+                    <span class="text-2xl font-bold text-center m-2">
+                        {% if stat == 'name' %}
+                        {% if correct == False %}
+                        <span class="text-red-500">{{ player.name }}</span>
+                        {% elif correct == True %}
+                        <span class="text-green-500">{{ player.name }}</span>
+                        {% else %}
+                        <input type="text" name="value" id="value" placeholder="------" value="{{ value }}"
+                            class="w-64 border border-gray-900 rounded-lg bg-gray-800 text-white text-2xl text-center p-0"
+                            onkeypress="if (event.keyCode == 13) { submitForm(); }">
+                        {% endif %}
+                        {% else %}
+                        {{ player.name }}
+                        {% endif %}
+                        ({{ player.position }})
+                    </span>
+
+                </div>
+                <div class="flex flex-col pb-2 justify-center mx-auto items-center">
+                    <span class="text-8xl font-bold">
+                        OVR
+                    </span>
+                    <span class="text-8xl font-bold">
+                        {% if stat == 'ovr' %}
+                        {% if correct == False %}
+                        <span class="text-red-500">{{ player.ovr }}</span>
+                        {% elif correct == True %}
+                        <span class="text-green-500">{{ player.ovr }}</span>
+                        {% else %}
+                        <input type="text" name="value" id="ovr" placeholder="--" value="{{ value }}"
+                            class="w-48 border border-gray-900 rounded-lg bg-gray-800 text-white text-8xl text-center p-0"
+                            onkeypress="if (event.keyCode == 13) { submitForm(); }">
+                        {% endif %}
+                        {% else %}
+                        {{ player.ovr }}
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+            <div class="grid grid-rwos-2 w-full">
+                <div class="grid grid-cols-4 px-5">
+                    <div class="flex flex-col pb-2 justify-center mx-auto items-center">
+                        <img src="{{ player.team }}" alt="{{ player.teamName }}" class="w-72 object-contain">
+                    </div>
+                    <div class="flex flex-col pb-2 justify-center mx-auto items-center">
+                        <span class="text-8xl font-bold">
+                            PAC
+                        </span>
+                        <span class="text-8xl font-bold">
+                            {% if stat == 'pac' %}
+                            {% if correct == False %}
+                            <span class="text-red-500">{{ player.stats.pac }}</span>
+                            {% elif correct == True %}
+                            <span class="text-green-500">{{ player.stats.pac }}</span>
+                            {% else %}
+                            <input type="text" name="value" id="pac" placeholder="--" value="{{ value }}"
+                                class="w-48 border border-gray-900 rounded-lg bg-gray-800 text-white text-8xl text-center p-0"
+                                onkeypress="if (event.keyCode == 13) { submitForm(); }">
+                            {% endif %}
+                            {% else %}
+                            {{ player.stats.pac }}
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="flex flex-col pb-2 justify-center mx-auto items-center">
+                        <span class="text-8xl font-bold">
+                            SHO
+                        </span>
+                        <span class="text-8xl font-bold">
+                            {% if stat == 'sho' %}
+                            {% if correct == False %}
+                            <span class="text-red-500">{{ player.stats.sho }}</span>
+                            {% elif correct == True %}
+                            <span class="text-green-500">{{ player.stats.sho }}</span>
+                            {% else %}
+                            <input type="text" name="value" id="sho" placeholder="--" value="{{ value }}"
+                                class="w-48 border border-gray-900 rounded-lg bg-gray-800 text-white text-8xl text-center p-0"
+                                onkeypress="if (event.keyCode == 13) { submitForm(); }">
+                            {% endif %}
+                            {% else %}
+                            {{ player.stats.sho }}
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="flex flex-col pb-2 justify-center mx-auto items-center">
+                        <span class="text-8xl font-bold">
+                            PAS
+                        </span>
+                        <span class="text-8xl font-bold">
+                            {% if stat == 'pas' %}
+                            {% if correct == False %}
+                            <span class="text-red-500">{{ player.stats.pas }}</span>
+                            {% elif correct == True %}
+                            <span class="text-green-500">{{ player.stats.pas }}</span>
+                            {% else %}
+                            <input type="text" name="value" id="pas" placeholder="--" value="{{ value }}"
+                                class="w-48 border border-gray-900 rounded-lg bg-gray-800 text-white text-8xl text-center p-0"
+                                onkeypress="if (event.keyCode == 13) { submitForm(); }">
+                            {% endif %}
+                            {% else %}
+                            {{ player.stats.pas }}
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+                <div class="grid grid-cols-4 p-5">
+                    <div class="flex flex-col pb-2 justify-center mx-auto items-center">
+                        <div class="flex pb-2 justify-center">
+                            <img src="{{ player.flag }}" alt="{{ player.nationality }}" class="w-72 object-contain">
+                        </div>
+                    </div>
+                    <div class="flex flex-col pb-2 justify-center mx-auto items-center">
+                        <span class="text-8xl font-bold">
+                            DRI
+                        </span>
+                        <span class="text-8xl font-bold">
+                            {% if stat == 'dri' %}
+                            {% if correct == False %}
+                            <span class="text-red-500">{{ player.stats.dri }}</span>
+                            {% elif correct == True %}
+                            <span class="text-green-500">{{ player.stats.dri }}</span>
+                            {% else %}
+                            <input type="text" name="value" id="dri" placeholder="--" value="{{ value }}"
+                                class="w-48 border border-gray-900 rounded-lg bg-gray-800 text-white text-8xl text-center p-0"
+                                onkeypress="if (event.keyCode == 13) { submitForm(); }">
+                            {% endif %}
+                            {% else %}
+                            {{ player.stats.dri }}
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="flex flex-col pb-2 justify-center mx-auto items-center">
+                        <span class="text-8xl font-bold">
+                            DEF
+                        </span>
+                        <span class="text-8xl font-bold">
+                            {% if stat == 'def' %}
+                            {% if correct == False %}
+                            <span class="text-red-500">{{ player.stats.def }}</span>
+                            {% elif correct == True %}
+                            <span class="text-green-500">{{ player.stats.def }}</span>
+                            {% else %}
+                            <input type="text" name="value" id="def" placeholder="--" value="{{ value }}"
+                                class="w-48 border border-gray-900 rounded-lg bg-gray-800 text-white text-8xl text-center p-0"
+                                onkeypress="if (event.keyCode == 13) { submitForm(); }">
+                            {% endif %}
+                            {% else %}
+                            {{ player.stats.def }}
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="flex flex-col pb-2 justify-center mx-auto items-center">
+                        <span class="text-8xl font-bold">
+                            PHY
+                        </span>
+                        <span class="text-8xl font-bold">
+                            {% if stat == 'phy' %}
+                            {% if correct == False %}
+                            <span class="text-red-500">{{ player.stats.phy }}</span>
+                            {% elif correct == True %}
+                            <span class="text-green-500">{{ player.stats.phy }}</span>
+                            {% else %}
+                            <input type="text" name="value" id="phy" placeholder="--" value="{{ value }}"
+                                class="w-48 border border-gray-900 rounded-lg bg-gray-800 text-white text-8xl text-center p-0"
+                                onkeypress="if (event.keyCode == 13) { submitForm(); }">
+                            {% endif %}
+                            {% else %}
+                            {{ player.stats.phy }}
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+{% endblock content %}

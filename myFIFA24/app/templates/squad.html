@@ -1,0 +1,490 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+{% include "navbar.html" %}
+
+{% load functions %}
+<style>
+    .save-squad-section {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        margin-left: auto;
+        /* Push to the right */
+        margin-right: 100px;
+        /* Add some space on the right */
+    }
+
+    #squadName {
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        width: 200px;
+    }
+
+    #saveSquadButton {
+        padding: 8px 16px;
+        border: none;
+        background-color: #4caf50;
+        color: white;
+        cursor: pointer;
+        border-radius: 4px;
+        margin-bottom: 20px;
+    }
+
+    #saveSquadButton:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
+
+    .delete-button {
+        position: absolute;
+        top: 5px;
+        /* Adjust as needed */
+        right: 5px;
+        /* Adjust as needed */
+        background-color: transparent;
+        border: none;
+        font-size: 16px;
+        cursor: pointer;
+        z-index: 10;
+        /* Ensure it's on top */
+    }
+
+    .player-rectangle {
+        position: relative;
+        /* Add this line */
+        width: 100px;
+        height: 120px;
+        border-radius: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+        font-size: 18px;
+        margin: 0 auto;
+    }
+
+    /* Modal Overlay */
+    .modal-overlay {
+        display: none;
+        /* Hidden by default */
+        position: fixed;
+        /* Stay in place */
+        z-index: 10;
+        /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%;
+        /* Full width */
+        height: 100%;
+        /* Full height */
+        overflow: auto;
+        /* Enable scroll if needed */
+        background-color: rgba(0, 0, 0, 0.4);
+        /* Black w/ opacity */
+    }
+
+    /* Modal Content */
+    .modal-content {
+        position: relative;
+        /* Allows absolute positioning of child elements */
+        background-color: #fefefe;
+        margin: 15% auto;
+        /* 15% from the top and centered */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        /* Could be more or less, depending on screen size */
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        /* Add shadow for depth */
+        animation: modalopen 0.5s;
+        /* Add animation for smooth appearance */
+    }
+
+    /* Close Button */
+    .close-button {
+        position: absolute;
+        /* Position relative to the nearest positioned ancestor */
+        top: 10px;
+        /* Adjust as needed */
+        right: 10px;
+        /* Adjust as needed */
+        color: #aaa;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .close-button:hover,
+    .close-button:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    /* Input Field */
+    input[type="text"] {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        box-sizing: border-box;
+        border: 2px solid #ccc;
+        border-radius: 4px;
+    }
+
+    /* Add Player Button */
+    button[type="submit"] {
+        background-color: #4caf50;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        border-radius: 4px;
+    }
+
+    button[type="submit"]:hover {
+        background-color: #45a049;
+    }
+
+    /* Modal Appearance Animation */
+    @keyframes modalopen {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    th,
+    td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+        color: black;
+    }
+
+    tr:hover {
+        background-color: #f5f5f5;
+    }
+</style>
+<form method="post">{% csrf_token %}
+    <div class="max-w-screen-xl flex items-center justify-between mx-auto">
+        <div class="object-cover py-10 my-10 w-full rounded-3xl"
+            style="background-image: url('/static/src/OIG3.80UlrtEk.9P3nDAxXo.jpeg'); background-repeat: no-repeat; background-position: 10%;">
+            <!-- Forwards -->
+            <div class="forwards-row w-full" style="display: flex; justify-content: space-around;">
+                <input type="hidden" id="9" name="9" value="" />
+                <input type="hidden" id="10" name="10" value="" />
+                <input type="hidden" id="11" name="11" value="" />
+                {% if create %}
+                {% for i in "901" %}
+                <div class="player-rectangle forward"
+                    style="width: 100px; height: 120px; background-color: #d3d3d3; background-size: contain; background-repeat: no-repeat; border-radius: 10px; display: flex; justify-content: center; align-items: center; color: #fff; font-size: 18px; position: relative;"
+                    onclick="document.getElementById('playerModalOverlay').style.display = 'block'" data-player-position="{{ i|page }}">
+                    <button class="delete-button" type="button" onclick="removeShieldAndChangeColor(this.parentElement)"
+                    style="position: absolute; top: 5px; right: 5px; background-color: transparent; border: none; font-size: 16px; cursor: pointer; display: none;">X</button>
+                </div>
+                {% endfor %}
+                {% else %}
+                {% for player in squad.players %}
+                {% if player.pos|slice:":1" == '9' or player.pos|slice:":1" == '10' or player.pos|slice:":1" == '11' %}
+                <input type="hidden" id="{{ player.pos|slice:':1' }}" name="{{ player.pos|slice:':1' }}" value="" />
+                <div class="player-rectangle forward"
+                    style="width: 100px; height: 120px; background-image: url('{{ player.shield }}'); background-size: contain; background-repeat: no-repeat; border-radius: 10px; display: flex; justify-content: center; align-items: center; color: #fff; font-size: 18px; position: relative;"
+                    data-player-position="{{ player.pos|slice:':1' }}">
+                    <button class="delete-button" type="button" onclick="removeShieldAndChangeColor(this.parentElement)"
+                        style="position: absolute; top: 5px; right: 5px; background-color: transparent; border: none; font-size: 16px; cursor: pointer;">X</button>
+                </div>
+                {% endif %}
+                {% endfor %}
+                {% endif %}
+            </div>
+            <!-- Midfielders -->
+            <div class="midfielders-row w-full" style="display: flex; justify-content: center;">
+                <input type="hidden" id="6" name="6" value="" />
+                <input type="hidden" id="7" name="7" value="" />
+                <input type="hidden" id="8" name="8" value="" />
+                {% if create %}
+                {% for i in "678" %}
+                <div class="player-rectangle midfielder"
+                    style="width: 100px; height: 120px; background-color: #d3d3d3; background-size: contain; background-repeat: no-repeat; border-radius: 10px; display: flex; justify-content: center; align-items: center; color: #fff; font-size: 18px; position: relative;"
+                    onclick="document.getElementById('playerModalOverlay').style.display = 'block'" data-player-position="{{ i }}">
+                    <button class="delete-button" type="button" onclick="removeShieldAndChangeColor(this.parentElement)"
+                    style="position: absolute; top: 5px; right: 5px; background-color: transparent; border: none; font-size: 16px; cursor: pointer; display: none;">X</button>
+                </div>
+                {% endfor %}
+                {% else %}
+                {% for player in squad.players %}
+                {% if player.pos|slice:":1" == '6' or player.pos|slice:":1" == '7' or player.pos|slice:":1" == '8' %}
+                <input type="hidden" id="{{ player.pos|slice:':1' }}" name="{{ player.pos|slice:':1' }}" value="" />
+                <div class="player-rectangle midfielder"
+                    style="width: 100px; height: 120px; background-image: url('{{ player.shield }}'); background-size: contain; background-repeat: no-repeat; border-radius: 10px; display: flex; justify-content: center; align-items: center; color: #fff; font-size: 18px; position: relative;"
+                    data-player-position="{{ player.pos|slice:':1' }}">
+                    <button class="delete-button" type="button" onclick="removeShieldAndChangeColor(this.parentElement)"
+                        style="position: absolute; top: 5px; right: 5px; background-color: transparent; border: none; font-size: 16px; cursor: pointer;">X</button>
+                </div>
+                {% endif %}
+                {% endfor %}
+                {% endif %}
+            </div>
+            <!-- Defenders -->
+            <div class="defenders-row w-full" style="display: flex; justify-content: space-around;;">
+                <input type="hidden" id="2" name="2" value="" />
+                <input type="hidden" id="3" name="3" value="" />
+                <input type="hidden" id="4" name="4" value="" />
+                <input type="hidden" id="5" name="5" value="" />
+                {% if create %}
+                {% for i in "2345" %}
+                <div class="player-rectangle defender"
+                    style="width: 100px; height: 120px; background-color: #d3d3d3; background-size: contain; background-repeat: no-repeat; border-radius: 10px; display: flex; justify-content: center; align-items: center; color: #fff; font-size: 18px; position: relative;"
+                    onclick="document.getElementById('playerModalOverlay').style.display = 'block'" data-player-position="{{ i }}">
+                    <button class="delete-button" type="button" onclick="removeShieldAndChangeColor(this.parentElement)"
+                    style="position: absolute; top: 5px; right: 5px; background-color: transparent; border: none; font-size: 16px; cursor: pointer; display: none;">X</button>
+                </div>
+                {% endfor %}
+                {% else %}
+                {% for player in squad.players %}
+                {% if player.pos|slice:":1" == '2' or player.pos|slice:":1" == '3' or player.pos|slice:":1" == '4' or player.pos|slice:":1" == '5' %}
+                <div class="player-rectangle defender"
+                    style="width: 100px; height: 120px; background-image: url('{{ player.shield }}'); background-size: contain; background-repeat: no-repeat; border-radius: 10px; display: flex; justify-content: center; align-items: center; color: #fff; font-size: 18px; position: relative;"
+                    data-player-position="{{ player.pos|slice:':1' }}">
+                    <button class="delete-button" type="button" onclick="removeShieldAndChangeColor(this.parentElement)"
+                        style="position: absolute; top: 5px; right: 5px; background-color: transparent; border: none; font-size: 16px; cursor: pointer;">X</button>
+                </div>
+                {% endif %}
+                {% endfor %}
+                {% endif %}
+            </div>
+            <!-- Goalkeeper -->
+            <div class="goalkeeper-row w-full" style="display: flex; justify-content: center;">
+                <input type="hidden" id="1" name="1" value="" />
+                {% if create %}
+                <div class="player-rectangle goalkeeper"
+                    style="width: 100px; height: 120px; background-color: #d3d3d3; background-size: contain; background-repeat: no-repeat; border-radius: 10px; display: flex; justify-content: center; align-items: center; color: #fff; font-size: 18px; margin: 0 auto; position: relative;"
+                    data-player-position="1">
+                    <button class="delete-button" type="button" onclick="removeShieldAndChangeColor(this.parentElement)"
+                        style="position: absolute; top: 5px; right: 5px; background-color: transparent; border: none; font-size: 16px; cursor: pointer; display: none;">X</button>
+                </div>
+                {% else %}
+                {% for player in squad.players %}
+                {% if player.pos == '1' %}
+                <div class="player-rectangle goalkeeper"
+                    style="width: 100px; height: 120px; background-image: url('{{ player.shield }}'); background-size: contain; background-repeat: no-repeat; border-radius: 10px; display: flex; justify-content: center; align-items: center; color: #fff; font-size: 18px; margin: 0 auto; position: relative;"
+                    data-player-position="1">
+                    <button class="delete-button" type="button" onclick="removeShieldAndChangeColor(this.parentElement)"
+                        style="position: absolute; top: 3px; right: 3px; background-color: transparent; border: none; font-size: 16px; cursor: pointer;">X</button>
+                </div>
+                {% endif %}
+                {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+        <div class="p-5 flex flex-col">
+            <select class="text-center w-full rounded-lg py-1" id="squadFormation" name="squadFormation">
+                <option>
+                    Select a Formation
+                </option>
+                <option value="4-3-3"
+                {% if squad.formation == '4-3-3' %}selected{% endif %}>
+                    4-3-3
+                </option>
+            </select>
+            <input class="flex text-center w-full" type="text" id="squadName" name="squadName"
+                value="{{ squad.name }}" />
+            <button class="success w-full" id="saveSquadButton" onclick="this.form.submit()">Save Squad</button>
+        </div>
+    </div>
+</form>
+<!-- Modal Overlay -->
+<div id="playerModalOverlay" class="modal-overlay">
+    <div class="modal-content">
+        <h2>Search for a Player</h2>
+        <!-- Close Button Inside Modal -->
+        <button id="closeModal" class="close-button">&times;</button>
+        <div id="searchResults"></div>
+        <!-- Input field for player name -->
+        <form id="playerForm2">
+            <input type="text" id="name" name="name" placeholder="Enter player name" />
+            <button type="submit">Search for Player</button>
+        </form>
+        <!-- Area for search results -->
+        <div id="searchResults"></div>
+    </div>
+</div>
+
+<script>
+    // Get the modal overlay
+    let actualPosition = null;
+    var modalOverlay = document.getElementById("playerModalOverlay");
+
+    // Get the close button
+    var closeModalButton = document.getElementById("closeModal");
+
+    // Variable to store the clicked box
+    let clickedBox = null;
+
+
+    function removeShieldAndChangeColor(playerBox) {
+        // Remove the background image
+        playerBox.style.backgroundImage = "none";
+        // Change the background color to a static color, e.g., light gray
+        playerBox.style.backgroundColor = "#d3d3d3";
+        // Make the box clickable again for adding players
+        playerBox.onclick = function () {
+            modalOverlay.style.display = "block";
+            clickedBox = playerBox; // Set the clicked box
+        };
+        // Remove the "X" button
+        playerBox.querySelector(".delete-button").style.display = "none";
+    }
+
+    // When the user clicks on the close button, close the modal overlay
+    closeModalButton.onclick = function () {
+        modalOverlay.style.display = "none";
+        resetModal(); // Reset the modal
+    };
+
+    // When the user clicks anywhere outside of the modal content, close it
+    window.onclick = function (event) {
+        if (event.target == modalOverlay) {
+            modalOverlay.style.display = "none";
+            resetModal(); // Reset the modal
+        }
+    };
+
+    // When the user clicks on a player box, open the modal overlay
+    document.querySelectorAll(".player-rectangle").forEach(function (box) {
+        box.onclick = function () {
+            console.log("Clicked on box with position:", box.getAttribute("data-player-position"));
+            actualPosition = box.getAttribute("data-player-position");
+            modalOverlay.style.display = "block";
+            clickedBox = box; // Set the clicked box
+        };
+    });
+
+    function searchPlayers(query) {
+        console.log("Searching for players with name:", query);
+        fetch("/search-players/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-CSRFToken": "{{ csrf_token }}",
+            },
+            body: `name=${encodeURIComponent(query)}`,
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                // Clear previous search results
+                document.getElementById("searchResults").innerHTML = "";
+
+                // Create table
+                const table = document.createElement("table");
+                table.style.width = "100%";
+                table.style.borderCollapse = "collapse";
+
+                // Create table header
+                const thead = document.createElement("thead");
+                const headerRow = document.createElement("tr");
+                const nameHeader = document.createElement("th");
+                nameHeader.textContent = "Name";
+                const shieldHeader = document.createElement("th");
+                shieldHeader.textContent = "Shield";
+                headerRow.appendChild(nameHeader);
+                headerRow.appendChild(shieldHeader);
+                thead.appendChild(headerRow);
+                table.appendChild(thead);
+
+                // Create table body
+                const tbody = document.createElement("tbody");
+                data.forEach((player) => {
+                    const row = document.createElement("tr");
+                    row.onclick = function () {
+                        updateBox(player.id, player.shield); // Call updateBox with the player's name and shield URL
+                    };
+                    const nameCell = document.createElement("td");
+                    nameCell.textContent = player.name;
+                    const shieldCell = document.createElement("td");
+                    shieldCell.innerHTML = `<img src="${player.shield}" alt="Shield" height="50" width="50">`;
+                    row.appendChild(nameCell);
+                    row.appendChild(shieldCell);
+                    tbody.appendChild(row);
+                });
+                table.appendChild(tbody);
+
+                // Append table to searchResults
+                document.getElementById("searchResults").appendChild(table);
+            })
+            .catch((error) => console.error("Error:", error));
+    }
+
+    function handleDeleteButtonClick() {
+        removeShieldAndChangeColor(this.parentElement);
+    }
+
+    function updateBox(id, shieldUrl) {
+        if (clickedBox) {
+            // Set the background image of the clicked box
+            clickedBox.style.backgroundImage = `url(${shieldUrl})`;
+            // Set the background size to cover the entire box
+            clickedBox.style.backgroundSize = "contain";
+            // Center the background image
+            clickedBox.style.backgroundPosition = "center";
+            // add no-repeat
+            clickedBox.style.backgroundRepeat = "no-repeat";
+            // Remove the background color
+            clickedBox.style.backgroundColor = "transparent";
+            // Remove any text content
+            clickedBox.textContent = "";
+            document.getElementById(actualPosition).value = id;
+            // Check if the "X" button already exists
+            let deleteButton = clickedBox.querySelector(".delete-button");
+            if (!deleteButton) {
+                // If the "X" button does not exist, add it back
+                deleteButton = document.createElement("button");
+                deleteButton.type = "button";
+                deleteButton.className = "delete-button";
+                deleteButton.textContent = "X";
+                deleteButton.onclick = handleDeleteButtonClick;
+                clickedBox.appendChild(deleteButton);
+            }
+            // Close the modal
+            modalOverlay.style.display = "none";
+            // Reset the modal
+            resetModal();
+            // Reset the clicked box
+            clickedBox = null;
+        }
+    }
+
+    // Prevent form submission and call searchPlayers
+    document.getElementById("playerForm2").addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevent the form from submitting
+        var query = document.getElementById("name").value; // Get the search query from the input field
+        searchPlayers(query); // Call the searchPlayers function with the query
+    });
+
+    // Clear modal
+    function resetModal() {
+        document.getElementById("searchResults").innerHTML = "";
+        document.getElementById("name").value = "";
+    }
+
+</script>
+
+{% endblock content %}

@@ -1,0 +1,49 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+{% include "navbar.html" %}
+
+<div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto py-10">
+    <div class="container mx-auto">
+        <button class="mb-2 bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+            <a href="/squad/create/" class="text-white">New Squad</a>
+        </button>
+        <table class="table-auto w-full text-white bg-gray-800 opacity-80">
+            <thead>
+                <tr class="flex">
+                    <th class="flex px-4 py-2 text-center w-1/4">Squad Name</th>
+                    <th class="px-4 py-2 mr-auto">Formation</th>
+                    <th class="px-4 py-2"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for squad in squads %}
+                <tr class="flex {{ forloop.counter|divisibleby:'2'|yesno:'bg-gray-700,bg-gray-800' }} border-y-2">
+                    <td class="flex px-4 py-2 text-center w-1/4">
+                        <a href="/squad/{{ squad.squadId }}">
+                            {{ squad.name }}
+                        </a>
+                    </td>
+                    <td class="px-4 py-2 mr-auto">
+                        {{ squad.formation }}
+                    </td>
+                    <td class="p-2 ml-auto">
+                        <a class="flex" href="/delete-squad/{{ squad.squadId }}">
+                            <svg class="w-6 h-6 text-red-600 border-red-600 border-2 rounded-lg shadow-md" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                                viewBox="0 0 24 24">
+                                <path fill-rule="evenodd"
+                                    d="M8.586 2.586A2 2 0 0 1 10 2h4a2 2 0 0 1 2 2v2h3a1 1 0 1 1 0 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V8a1 1 0 0 1 0-2h3V4a2 2 0 0 1 .586-1.414ZM10 6h4V4h-4v2Zm1 4a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Zm4 0a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+{% load functions %}
+
+{% include "navbar.html" %}
+
+<div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto py-10">
+    <div class="container mx-auto">
+        <table class="table-auto w-full text-white bg-gray-800 opacity-80">
+            <thead>
+                <tr>
+                    <th class="px-2 py-2 text-center"></th>
+                    <th class="px-4 py-2 text-center">Name</th>
+                    <th class="px-4 py-2 text-center">Nationality</th>
+                    <th class="px-4 py-2 text-center">OVR</th>
+                    <th class="px-2 py-2 text-center">Position</th>
+                    <th class="px-2 py-2 text-center">Skill Moves</th>
+                    <th class="px-2 py-2 text-center">Week Foot Ability</th>
+                    <th class="px-2 py-2 text-center">Work Rate</th>
+                    <th class="px-2 py-2 text-center">PAC</th>
+                    <th class="px-2 py-2 text-center">SHO</th>
+                    <th class="px-2 py-2 text-center">PAS</th>
+                    <th class="px-2 py-2 text-center">DRI</th>
+                    <th class="px-2 py-2 text-center">DEF</th>
+                    <th class="px-2 py-2 text-center">PHY</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for player in players %}
+                <tr class="{{ forloop.counter|divisibleby:'2'|yesno:'bg-gray-700,bg-gray-800' }} border-y-2">
+                    <td class="p-2 text-center">
+                        <a href="/player/{{ player.id }}">
+                            <img src="{{ player.image }}" alt="{{ player.name }}" class="h-12 object-contain" />
+                        </a>
+                    </td>
+                    <!-- The "Name" column is now the search bar -->
+                    <td class="px-2 py-2 text-center">
+                        <a href="/player/{{ player.id }}">
+                            {{ player.name }}
+                        </a>
+                    </td>
+                    <td class="px-2 py-2 text-center">
+                        <img src="{{ player.flag }}" class="w-14 h-12 object-contain mx-auto"
+                            title="{{ player.nationality }}" />
+                    </td>
+                    <td class="p-2 text-center">{{ player.ovr }}</td>
+                    <td class="p-2 text-center">{{ player.position }}</td>
+                    <td class="p-2 text-center">
+                        <div class="flex text-center mx-auto w-max">
+                            {{ player.skills }}<svg class="w-6 h-6 text-white" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M13.849 4.22c-.684-1.626-3.014-1.626-3.698 0L8.397 8.387l-4.552.361c-1.775.14-2.495 2.331-1.142 3.477l3.468 2.937-1.06 4.392c-.413 1.713 1.472 3.067 2.992 2.149L12 19.35l3.897 2.354c1.52.918 3.405-.436 2.992-2.15l-1.06-4.39 3.468-2.938c1.353-1.146.633-3.336-1.142-3.477l-4.552-.36-1.754-4.17Z" />
+                            </svg>
+                        </div>
+                    </td>
+                    <td class="p-2 text-center">
+                        <div class="flex text-center mx-auto w-max">
+                            {{ player.weakfoot }}<svg class="w-6 h-6 text-white" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M13.849 4.22c-.684-1.626-3.014-1.626-3.698 0L8.397 8.387l-4.552.361c-1.775.14-2.495 2.331-1.142 3.477l3.468 2.937-1.06 4.392c-.413 1.713 1.472 3.067 2.992 2.149L12 19.35l3.897 2.354c1.52.918 3.405-.436 2.992-2.15l-1.06-4.39 3.468-2.938c1.353-1.146.633-3.336-1.142-3.477l-4.552-.36-1.754-4.17Z" />
+                            </svg>
+                        </div>
+                    </td>
+                    <td class="px-2 text-center">{{ player.attwr|compute_wr }}\{{ player.defwr|compute_wr }}</td>
+                    <td class="px-2 text-center">{{ player.stats.pac }}</td>
+                    <td class="px-2 text-center">{{ player.stats.sho }}</td>
+                    <td class="px-2 text-center">{{ player.stats.pas }}</td>
+                    <td class="px-2 text-center">{{ player.stats.dri }}</td>
+                    <td class="px-2 text-center">{{ player.stats.def }}</td>
+                    <td class="px-2 text-center">{{ player.stats.phy }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock content %}

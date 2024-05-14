@@ -1,0 +1,28 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyFifa24</title>
+    <link href="{% static 'src/styles.css' %}" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.15/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="shortcut icon" href="{% static 'src/icon.png' %}" type="image/x-icon">
+</head>
+
+<body>
+    <div class="fixed bg-cover h-screen w-screen bg-gray-900">
+        <div class="h-full w-full absolute"
+            style="background-image: url('/static/src/OIG3.jpeg'); background-size: cover; background-position: bottom; filter: grayscale(); opacity: 0.1;">
+        </div>
+    </div>
+    <div class="absolute top-0 w-full h-full">
+        {% block content %}
+        {% endblock content %}
+    </div>
+</body>
+
+</html>
