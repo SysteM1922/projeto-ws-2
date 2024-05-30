@@ -203,15 +203,15 @@
                 {% endfor %}
                 {% else %}
                 {% for player in squad.players %}
-                {% if player.pos|slice:":1" == '9' or player.pos|slice:":1" == '10' or player.pos|slice:":1" == '11' %}
-                <input type="hidden" id="{{ player.pos|slice:':1' }}" name="{{ player.pos|slice:':1' }}" value="" />
-                <div class="player-rectangle forward"
-                    style="width: 100px; height: 120px; background-image: url('{{ player.shield }}'); background-size: contain; background-repeat: no-repeat; border-radius: 10px; display: flex; justify-content: center; align-items: center; color: #fff; font-size: 18px; position: relative;"
-                    data-player-position="{{ player.pos|slice:':1' }}">
-                    <button class="delete-button" type="button" onclick="removeShieldAndChangeColor(this.parentElement)"
-                        style="position: absolute; top: 5px; right: 5px; background-color: transparent; border: none; font-size: 16px; cursor: pointer;">X</button>
-                </div>
-                {% endif %}
+                    {% if player.id == '9' or player.id == '10' or player.id == '11' %}
+                    <input type="hidden" id="{{ player.pos|slice:':1' }}" name="{{ player.pos|slice:':1' }}" value="" />
+                    <div class="player-rectangle forward"
+                        style="width: 100px; height: 120px; background-image: url('{{ player.shield }}'); background-size: contain; background-repeat: no-repeat; border-radius: 10px; display: flex; justify-content: center; align-items: center; color: #fff; font-size: 18px; position: relative;"
+                        data-player-position="{{ player.pos|slice:':1' }}">
+                        <button class="delete-button" type="button" onclick="removeShieldAndChangeColor(this.parentElement)"
+                            style="position: absolute; top: 5px; right: 5px; background-color: transparent; border: none; font-size: 16px; cursor: pointer;">X</button>
+                    </div>
+                    {% endif %}
                 {% endfor %}
                 {% endif %}
             </div>
@@ -307,7 +307,7 @@
             </select>
             <input class="flex text-center w-full" type="text" id="squadName" name="squadName"
                 value="{{ squad.name }}" />
-            <button class="success w-full" id="saveSquadButton" onclick="this.form.submit()">Save Squad</button>
+            <button class="success w-full" id="saveSquadButton" onclick="this.form.submit()">Update Squad</button>
         </div>
     </div>
 </form>

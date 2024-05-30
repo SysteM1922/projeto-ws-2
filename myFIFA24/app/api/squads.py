@@ -58,7 +58,7 @@ def get_squad_by_guid(guid: str) -> dict:
 
     return sorted(squad["players"], key=lambda x: x["pos"])
 
-def create_squad(user_id: str, squad: dict) -> dict:
+""" def create_squad(user_id: str, squad: dict) -> dict:
 
     status = ask(f"ASK {{ <http://fifa24/squad/guid/{squad["id"]}> ?p ?o }}")
 
@@ -71,7 +71,7 @@ def create_squad(user_id: str, squad: dict) -> dict:
         squad_players += f"fifaspg:{squad["id"]+player["pos"]} fifaspp:player {player["id"]} .\n"
         squad_players += f"fifaspg:{squad["id"]+player["pos"]} fifaspp:position \"{player["pos"]}\"^^xsd:int .\n"
 
-    query = f"""
+    query = f
     PREFIX fifasqg: <http://fifa24/squad/guid/>
     PREFIX fifasqp: <http://fifa24/squad/pred/>
     PREFIX fifaspg: <http://fifa24/squad_player/guid/>
@@ -83,13 +83,13 @@ def create_squad(user_id: str, squad: dict) -> dict:
         fifasqg:{squad["id"]} fifasqp:userId "{user_id}"^^xsd:string .
         {squad_players}
     }}
-    """
+    
 
     update(query)
 
     return ask(f"ASK {{ <http://fifa24/squad/guid/{squad["id"]}> ?p ?o }}")
-
-def update_squad(guid: str, squad: dict) -> dict:
+"""
+""" def update_squad(guid: str, squad: dict) -> dict:
     
     delete = ""
     insert = ""
@@ -107,18 +107,18 @@ def update_squad(guid: str, squad: dict) -> dict:
             old_players.append(old_player)
             new_players.append(new_player)
 
-            delete += f"""
+            delete += f
             fifasqg:{guid} fifasqp:player fifaspg:{old_player["squadPlayerId"]} .
             fifaspg:{old_player["squadPlayerId"]} ?p{old_player["pos"]} ?o{old_player["pos"]} .
-            """
+            
             if new_player["id"]:
-                insert += f"""
+                insert += f
                 fifasqg:{guid} fifasqp:player fifaspg:{guid+new_player["pos"]} .
                 fifaspg:{old_player["squadPlayerId"]} fifaspp:player fifaspg:{new_player["id"]} .
                 fifaspg:{old_player["squadPlayerId"]} fifaspp:position "{new_player["pos"]}"^^xsd:int .
-                """
+                
 
-    query = f"""
+    query = f
     PREFIX fifasqg: <http://fifa24/squad/guid/>
     PREFIX fifasqp: <http://fifa24/squad/pred/>
     PREFIX fifaspg: <http://fifa24/squad_player/guid/>
@@ -133,7 +133,6 @@ def update_squad(guid: str, squad: dict) -> dict:
     INSERT DATA{{
         {insert}
     }}
-    """
 
     update(query)
 
@@ -147,7 +146,7 @@ def update_squad(guid: str, squad: dict) -> dict:
         if ask(f"ASK {{ <{player["squadPlayerId"]}> fifaspp:player <{player["id"]}> }}"):
             return False
         
-    return True
+    return True """
 
 def delete_squad(guid: str) -> dict:
     query = f"""

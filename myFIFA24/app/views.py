@@ -243,7 +243,29 @@ def squads_by_user(request):
 
 @login_required(login_url='login')
 def update_squad(request, squad_id):
-    squad = squads_api.get_squad_by_guid(squad_id)
+    # squad = squads_api.get_squad_by_guid(squad_id)
+    # TODO: fix this here
+    squad_id = "1"
+    squad_name = "Test"
+    squad_formation = "4-3-3"
+    squad_players = [
+    {'id': '20801', 'pos': '1'},
+    {'id': '20801', 'pos': '2'},
+    {'id': '20801', 'pos': '3'},
+    {'id': '20801', 'pos': '4'},
+    {'id': '20801', 'pos': '5'},
+    {'id': '20801', 'pos': '6'},
+    {'id': '20801', 'pos': '7'},
+    {'id': '20801', 'pos': '8'},
+    {'id': '20801', 'pos': '9'},
+    {'id': '20801', 'pos': '10'},
+    {'id': '20801', 'pos': '11'}
+]
+
+    for player in squad_players:
+        player['shield'] = "https://w7.pngwing.com/pngs/450/941/png-transparent-cristiano-ronaldo.png"
+    
+    squad = {"id": squad_id, "name": squad_name, "formation": squad_formation, "players": squad_players}
 
     return render(request, 'squad.html', {'squad': squad, "create": False})
 
@@ -297,6 +319,9 @@ def update_squad_post(request, squad_id):
             # Assuming you have a function to update the squad in your database
             # This function should handle the squad_id, squad_name, squad_formation, and players array
             result = squads_api.update_squad(squad_id, squad={"id": squad_id, "name": squad_name, "formation": squad_formation, "players": players})
+
+            print("Hello")
+
 
             if result:
                 return JsonResponse({'status': 'success', 'message': 'Squad saved successfully.'})
