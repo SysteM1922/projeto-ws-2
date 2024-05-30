@@ -3,8 +3,7 @@ import json
 import os
 
 def filter_data(data):
-    del data['playStyle']
-    del data['playStylePlus']
+    del data['playerAbilities']
     del data['team']['isPopular']
     del data['position']['positionType']
 

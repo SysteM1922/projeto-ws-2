@@ -189,40 +189,45 @@ def search_players(request):
 
     return JsonResponse(results, safe=False)
 
+def build_squad(request, squad_id):
+    try:
+        squad_name = request.POST.get('squadName')
+        if not squad_name:
+            print("Squad_name:", squad_name)
+            squad_name = f"Squad {squad_id}"
+        formation = request.POST.get('squadFormation')
+        players = []
+        for i in range(1, 12):
+            player_id = request.POST.get(str(i))
+            if player_id:
+                players.append({"id": player_id.split("/")[-1], "pos": str(i)})
+
+        return {"id":str(squad_id), "name": squad_name, "formation": formation, "players": players}
+    except User.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'User not found'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)})
+
 @login_required(login_url='login')
 def create_squad(request):
 
     if request.method == 'POST':
+        user_id = request.user.id
+        user = User.objects.get(id=user_id)
+        profile = Profile.objects.get(user=user)
 
-        try:
-            squad_name = request.POST.get('squadName')
-            user_id = request.user.id
-            formation = request.POST.get('squadFormation')
-            players = []
-            for i in range(1, 12):
-                player_id = request.POST.get(str(i))
-                if player_id:
-                    players.append({"id": player_id.split("/")[-1], "pos": str(i)})
+        squad_id = profile.last_squad_id + 1
 
-            print("players:", players)
+        squad = build_squad(request, squad_id)
 
-            user = User.objects.get(id=user_id)
-            profile = Profile.objects.get(user=user)
+        result = squads_api.create_squad(user_id, squad)
 
-            squad_id = profile.last_squad_id + 1
-
-            result = squads_api.create_squad(user_id, squad={"id":str(squad_id), "name": squad_name, "formation": formation, "players": players})
-
-            if result:
-                profile.last_squad_id += 1
-                profile.save()
-                return redirect(f'/squads')
-            else:
-                return JsonResponse({'status': 'error', 'message': 'Squad already exists'})
-        except User.DoesNotExist:
-            return JsonResponse({'status': 'error', 'message': 'User not found'})
-        except Exception as e:
-            return JsonResponse({'status': 'error', 'message': str(e)})
+        if result:
+            profile.last_squad_id += 1
+            profile.save()
+            return redirect('squads')
+        else:
+            return JsonResponse({'status': 'error', 'message': 'Squad already exists'})
     else:
         return render(request, 'squad.html', {"create": True})
     
@@ -243,31 +248,21 @@ def squads_by_user(request):
 
 @login_required(login_url='login')
 def update_squad(request, squad_id):
-    # squad = squads_api.get_squad_by_guid(squad_id)
-    # TODO: fix this here
-    squad_id = "1"
-    squad_name = "Test"
-    squad_formation = "4-3-3"
-    squad_players = [
-    {'id': '20801', 'pos': '1'},
-    {'id': '20801', 'pos': '2'},
-    {'id': '20801', 'pos': '3'},
-    {'id': '20801', 'pos': '4'},
-    {'id': '20801', 'pos': '5'},
-    {'id': '20801', 'pos': '6'},
-    {'id': '20801', 'pos': '7'},
-    {'id': '20801', 'pos': '8'},
-    {'id': '20801', 'pos': '9'},
-    {'id': '20801', 'pos': '10'},
-    {'id': '20801', 'pos': '11'}
-]
 
-    for player in squad_players:
-        player['shield'] = "https://w7.pngwing.com/pngs/450/941/png-transparent-cristiano-ronaldo.png"
-    
-    squad = {"id": squad_id, "name": squad_name, "formation": squad_formation, "players": squad_players}
+    if request.method == 'POST':
+        squad = build_squad(request, squad_id)
 
-    return render(request, 'squad.html', {'squad': squad, "create": False})
+        result = squads_api.update_squad(squad_id, squad=squad)
+
+        if result:
+            return redirect(f'/squad/{squad_id}')
+        else:
+            return JsonResponse({'status': 'error', 'message': 'Failed to update squad'}, status=400)
+
+    else:
+        squad = squads_api.get_squad_by_guid(squad_id)
+
+        return render(request, 'squad.html', {'squad': squad, "create": False})
 
 last_player = None
 last_stat = None
@@ -305,29 +300,3 @@ def game_view(request):
     last_stat = stat
 
     return render(request, 'game.html', {'player': player, 'stat': stat, "value": ""})
-
-
-@login_required(login_url='login')  
-def update_squad_post(request, squad_id):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            squad_name = data.get('squadName')
-            squad_formation = data.get('squadFormation')
-            players = data.get('players') # This is now an array of dictionaries with 'id' and 'position'
-
-            # Assuming you have a function to update the squad in your database
-            # This function should handle the squad_id, squad_name, squad_formation, and players array
-            result = squads_api.update_squad(squad_id, squad={"id": squad_id, "name": squad_name, "formation": squad_formation, "players": players})
-
-            print("Hello")
-
-
-            if result:
-                return JsonResponse({'status': 'success', 'message': 'Squad saved successfully.'})
-            else:
-                return JsonResponse({'status': 'error', 'message': 'Failed to save squad.'}, status=400)
-        except Exception as e:
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
-    else:
-        return JsonResponse({'status': 'error', 'message': 'Invalid request method.'}, status=405)

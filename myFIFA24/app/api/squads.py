@@ -22,18 +22,20 @@ def get_squads_by_user_id(user_id: str) -> list[dict]:
 
 def get_squad_by_guid(guid: str) -> dict:
     query = f"""
-    PREFIX fifasqg: <http://fifa24/squad/guid>
+    PREFIX fifasqg: <http://fifa24/squad/guid/>
     PREFIX fifasqp: <http://fifa24/squad/pred/>
     PREFIX fifaspp: <http://fifa24/squad_player/pred/>
+    PREFIX fifaplp: <http://fifa24/player/pred/>
 
-    SELECT ?name ?formation ?playerId ?playerShield ?playerPos ?squadPlayerId
+    SELECT ?name ?formation ?playerId ?playerShield ?playerPos ?squadPlayerId ?userId
     WHERE {{
         fifasqg:{guid} fifasqp:name ?name .
         fifasqg:{guid} fifasqp:formation ?formation .
-        fifasqg:{guid} fifaspp:player ?squadPlayerId .
+        fifasqg:{guid} fifasqp:player ?squadPlayerId .
         ?squadPlayerId fifaspp:player ?playerId .
         ?squadPlayerId fifaspp:position ?playerPos .
         ?playerId fifaplp:shieldUrl ?playerShield .
+        fifasqg:{guid} fifasqp:userId ?userId .
     }}
     """
 
@@ -43,22 +45,24 @@ def get_squad_by_guid(guid: str) -> dict:
         return None
     
     squad = {
-        "squadId": guid,
+        "id": guid,
         "name": result[0]["name"],
         "formation": result[0]["formation"],
-        "players": []
+        "players": [],
+        "userId": result[0]["userId"],
     }
 
     for player in result:
         squad["players"].append({
             "id": player["playerId"].split("/")[-1],
             "shield": player["playerShield"],
-            "pos": player["playerPos"]
+            "pos": player["playerPos"],
+            "squadPlayerId": player["squadPlayerId"],
         })
 
-    return sorted(squad["players"], key=lambda x: x["pos"])
+    return squad
 
-""" def create_squad(user_id: str, squad: dict) -> dict:
+def create_squad(user_id: str, squad: dict) -> dict:
 
     status = ask(f"ASK {{ <http://fifa24/squad/guid/{squad["id"]}> ?p ?o }}")
 
@@ -68,14 +72,15 @@ def get_squad_by_guid(guid: str) -> dict:
     squad_players = ""
     for player in squad["players"]:
         squad_players += f"fifasqg:{squad["id"]} fifasqp:player fifaspg:{squad["id"]+player["pos"]} .\n"
-        squad_players += f"fifaspg:{squad["id"]+player["pos"]} fifaspp:player {player["id"]} .\n"
+        squad_players += f"fifaspg:{squad["id"]+player["pos"]} fifaspp:player fifaplg:{player["id"]} .\n"
         squad_players += f"fifaspg:{squad["id"]+player["pos"]} fifaspp:position \"{player["pos"]}\"^^xsd:int .\n"
 
-    query = f
+    query = f"""
     PREFIX fifasqg: <http://fifa24/squad/guid/>
     PREFIX fifasqp: <http://fifa24/squad/pred/>
     PREFIX fifaspg: <http://fifa24/squad_player/guid/>
     PREFIX fifaspp: <http://fifa24/squad_player/pred/>
+    PREFIX fifaplg: <http://fifa24/player/guid/>
 
     INSERT DATA {{
     	fifasqg:{squad["id"]} fifasqp:name "{squad["name"]}"^^xsd:string .
@@ -83,14 +88,14 @@ def get_squad_by_guid(guid: str) -> dict:
         fifasqg:{squad["id"]} fifasqp:userId "{user_id}"^^xsd:string .
         {squad_players}
     }}
-    
+    """
 
     update(query)
 
     return ask(f"ASK {{ <http://fifa24/squad/guid/{squad["id"]}> ?p ?o }}")
-"""
-""" def update_squad(guid: str, squad: dict) -> dict:
-    
+
+def update_squad(guid: str, squad: dict) -> dict:
+
     delete = ""
     insert = ""
 
@@ -102,69 +107,135 @@ def get_squad_by_guid(guid: str) -> dict:
     if not old_squad:
         return False
     
-    for old_player, new_player in zip(old_squad["players"], squad["players"]):
-        if old_player["id"] != new_player["id"]:
+    if old_squad["name"] != squad["name"]:
+        delete += f"""
+        fifasqg:{guid} fifasqp:name "{old_squad["name"]}"^^xsd:string .
+        """
+        insert += f"""
+        fifasqg:{guid} fifasqp:name "{squad["name"]}"^^xsd:string .
+        """
+
+    if old_squad["formation"] != squad["formation"]:
+        delete += f"""
+        fifasqg:{guid} fifasqp:formation "{old_squad["formation"]}"^^xsd:string .
+        """
+        insert += f"""
+        fifasqg:{guid} fifasqp:formation "{squad["formation"]}"^^xsd:string .
+        """
+    
+    old_players_by_pos = {player["pos"]: player for player in old_squad["players"]}
+    new_players_by_pos = {player["pos"]: player for player in squad["players"]}
+    
+    for pos in old_players_by_pos:
+        if pos in new_players_by_pos:
+            if old_players_by_pos[pos]["id"] != new_players_by_pos[pos]["id"]:
+                old_player = old_players_by_pos[pos]
+                new_player = new_players_by_pos[pos]
+                new_player["squadPlayerId"] = old_player["squadPlayerId"]
+                old_players.append(old_player)
+                new_players.append(new_player)
+
+                delete += f"""
+                fifasqg:{guid} fifasqp:player <{old_player["squadPlayerId"]}> .
+                <{old_player["squadPlayerId"]}> ?p{old_player["pos"]} ?o{old_player["pos"]} .
+                """
+                if new_player["id"]:
+                    insert += f"""
+                    fifasqg:{guid} fifasqp:player fifaspg:{guid+new_player["pos"]} .
+                    <{old_player["squadPlayerId"]}> fifaspp:player fifaplg:{new_player["id"]} .
+                    <{old_player["squadPlayerId"]}> fifaspp:position "{new_player["pos"]}"^^xsd:int .
+                    """
+        else:
+            old_player = old_players_by_pos[pos]
             old_players.append(old_player)
+            delete += f"""
+            fifasqg:{guid} fifasqp:player <{old_player["squadPlayerId"]}> .
+            <{old_player["squadPlayerId"]}> ?p{old_player["pos"]} ?o{old_player["pos"]} .
+            """
+
+    print(old_players_by_pos.keys())
+    print(new_players_by_pos.keys())
+
+    for pos in new_players_by_pos:
+        if pos not in old_players_by_pos:
+            new_player = new_players_by_pos[pos]
+            new_player["squadPlayerId"] = f'http://fifa24/squad_player/guid/{guid+new_player["pos"]}'
             new_players.append(new_player)
+            insert += f"""
+            fifasqg:{guid} fifasqp:player <{new_player["squadPlayerId"]}> .
+            <{new_player["squadPlayerId"]}> fifaspp:player fifaplg:{new_player["id"]} .
+            <{new_player["squadPlayerId"]}> fifaspp:position "{new_player["pos"]}"^^xsd:int .
+            """
 
-            delete += f
-            fifasqg:{guid} fifasqp:player fifaspg:{old_player["squadPlayerId"]} .
-            fifaspg:{old_player["squadPlayerId"]} ?p{old_player["pos"]} ?o{old_player["pos"]} .
-            
-            if new_player["id"]:
-                insert += f
-                fifasqg:{guid} fifasqp:player fifaspg:{guid+new_player["pos"]} .
-                fifaspg:{old_player["squadPlayerId"]} fifaspp:player fifaspg:{new_player["id"]} .
-                fifaspg:{old_player["squadPlayerId"]} fifaspp:position "{new_player["pos"]}"^^xsd:int .
-                
+    query_delete = f"""
+    PREFIX fifasqg: <http://fifa24/squad/guid/>
+    PREFIX fifasqp: <http://fifa24/squad/pred/>
 
-    query = f
+    DELETE {{
+        {delete}
+    }}
+    WHERE {{
+        {delete}
+    }}
+    """
+
+    query_insert = f"""
     PREFIX fifasqg: <http://fifa24/squad/guid/>
     PREFIX fifasqp: <http://fifa24/squad/pred/>
     PREFIX fifaspg: <http://fifa24/squad_player/guid/>
     PREFIX fifaspp: <http://fifa24/squad_player/pred/>
+    PREFIX fifaplg: <http://fifa24/player/guid/>
 
-    DELETE {{
-        {delete}
-    }}
-    WHERE {{
-        {delete}
-    }}
-    INSERT DATA{{
+    INSERT DATA {{
         {insert}
     }}
+    """
 
-    update(query)
-
-    query = ""
-
-    for player in new_players:
-        if not ask(f"ASK {{ <{player["squadPlayerId"]}> fifaspp:player <{player["id"]}> }}"):
-            return False
+    update(query_delete)
         
     for player in old_players:
-        if ask(f"ASK {{ <{player["squadPlayerId"]}> fifaspp:player <{player["id"]}> }}"):
+        if ask(f"ASK {{ <{player["squadPlayerId"]}> <http://fifa24/squad_player/pred/player> <http://fifa24/player/guid/{player["id"]}> }}"):
+            return False
+
+    update(query_insert)
+        
+    for player in new_players:
+        if not ask(f"ASK {{ <{player["squadPlayerId"]}> <http://fifa24/squad_player/pred/player> <http://fifa24/player/guid/{player["id"]}> }}"):
+            delete_squad(guid)
+            create_squad(old_squad["userId"], old_squad)
             return False
         
-    return True """
+    return True
 
 def delete_squad(guid: str) -> dict:
-    query = f"""
+    query_squad_players = f"""
     PREFIX fifasqg: <http://fifa24/squad/guid/>
     PREFIX fifasqp: <http://fifa24/squad/pred/>
 
     DELETE {{
-        fifasqg:{guid} ?p1 ?o1 .
         ?squadPlayerId ?p2 ?o2 .
     }}
     WHERE {{
-        fifasqg:{guid} ?p1 ?o1 .
         fifasqg:{guid} fifasqp:player ?squadPlayerId .
         ?squadPlayerId ?p2 ?o2 .
     }}
     """
 
-    update(query)
+    update(query_squad_players)
+
+    query_squad = f"""
+    PREFIX fifasqg: <http://fifa24/squad/guid/>
+    PREFIX fifasqp: <http://fifa24/squad/pred/>
+
+    DELETE {{
+        fifasqg:{guid} ?p1 ?o1 .
+    }}
+    WHERE {{
+        fifasqg:{guid} ?p1 ?o1 .
+    }}
+    """
+
+    update(query_squad)
 
     return not ask(f"ASK {{ <http://fifa24/squad/guid/{guid}> ?p ?o }}")
 
