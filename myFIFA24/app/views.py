@@ -193,7 +193,6 @@ def build_squad(request, squad_id):
     try:
         squad_name = request.POST.get('squadName')
         if not squad_name:
-            print("Squad_name:", squad_name)
             squad_name = f"Squad {squad_id}"
         formation = request.POST.get('squadFormation')
         players = []

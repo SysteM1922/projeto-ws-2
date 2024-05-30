@@ -31,10 +31,12 @@ def get_squad_by_guid(guid: str) -> dict:
     WHERE {{
         fifasqg:{guid} fifasqp:name ?name .
         fifasqg:{guid} fifasqp:formation ?formation .
-        fifasqg:{guid} fifasqp:player ?squadPlayerId .
-        ?squadPlayerId fifaspp:player ?playerId .
-        ?squadPlayerId fifaspp:position ?playerPos .
-        ?playerId fifaplp:shieldUrl ?playerShield .
+        OPTIONAL{{
+            fifasqg:{guid} fifasqp:player ?squadPlayerId .
+            ?squadPlayerId fifaspp:player ?playerId .
+            ?squadPlayerId fifaspp:position ?playerPos .
+            ?playerId fifaplp:shieldUrl ?playerShield .
+        }}
         fifasqg:{guid} fifasqp:userId ?userId .
     }}
     """
@@ -54,26 +56,26 @@ def get_squad_by_guid(guid: str) -> dict:
 
     for player in result:
         squad["players"].append({
-            "id": player["playerId"].split("/")[-1],
-            "shield": player["playerShield"],
-            "pos": player["playerPos"],
-            "squadPlayerId": player["squadPlayerId"],
+            "id": player.get("playerId", "").split("/")[-1],
+            "shield": player.get("playerShield"),
+            "pos": player.get("playerPos"),
+            "squadPlayerId": player.get("squadPlayerId"),
         })
 
     return squad
 
 def create_squad(user_id: str, squad: dict) -> dict:
 
-    status = ask(f"ASK {{ <http://fifa24/squad/guid/{squad["id"]}> ?p ?o }}")
+    status = ask(f"ASK {{ <http://fifa24/squad/guid/{user_id}_{squad["id"]}> ?p ?o }}")
 
     if status:
         return False
 
     squad_players = ""
     for player in squad["players"]:
-        squad_players += f"fifasqg:{squad["id"]} fifasqp:player fifaspg:{squad["id"]+player["pos"]} .\n"
-        squad_players += f"fifaspg:{squad["id"]+player["pos"]} fifaspp:player fifaplg:{player["id"]} .\n"
-        squad_players += f"fifaspg:{squad["id"]+player["pos"]} fifaspp:position \"{player["pos"]}\"^^xsd:int .\n"
+        squad_players += f"fifasqg:{user_id}_{squad["id"]} fifasqp:player fifaspg:{squad["id"]}_{player["pos"]} .\n"
+        squad_players += f"fifaspg:{squad["id"]}_{player["pos"]} fifaspp:player fifaplg:{player["id"]} .\n"
+        squad_players += f"fifaspg:{squad["id"]}_{player["pos"]} fifaspp:position \"{player["pos"]}\"^^xsd:int .\n"
 
     query = f"""
     PREFIX fifasqg: <http://fifa24/squad/guid/>
@@ -83,16 +85,16 @@ def create_squad(user_id: str, squad: dict) -> dict:
     PREFIX fifaplg: <http://fifa24/player/guid/>
 
     INSERT DATA {{
-    	fifasqg:{squad["id"]} fifasqp:name "{squad["name"]}"^^xsd:string .
-        fifasqg:{squad["id"]} fifasqp:formation "{squad["formation"]}"^^xsd:string .
-        fifasqg:{squad["id"]} fifasqp:userId "{user_id}"^^xsd:string .
+    	fifasqg:{user_id}_{squad["id"]} fifasqp:name "{squad["name"]}"^^xsd:string .
+        fifasqg:{user_id}_{squad["id"]} fifasqp:formation "{squad["formation"]}"^^xsd:string .
+        fifasqg:{user_id}_{squad["id"]} fifasqp:userId "{user_id}"^^xsd:string .
         {squad_players}
     }}
     """
 
     update(query)
 
-    return ask(f"ASK {{ <http://fifa24/squad/guid/{squad["id"]}> ?p ?o }}")
+    return ask(f"ASK {{ <http://fifa24/squad/guid/{user_id}_{squad["id"]}> ?p ?o }}")
 
 def update_squad(guid: str, squad: dict) -> dict:
 
@@ -141,7 +143,7 @@ def update_squad(guid: str, squad: dict) -> dict:
                 """
                 if new_player["id"]:
                     insert += f"""
-                    fifasqg:{guid} fifasqp:player fifaspg:{guid+new_player["pos"]} .
+                    fifasqg:{guid} fifasqp:player fifaspg:{guid}_{new_player["pos"]} .
                     <{old_player["squadPlayerId"]}> fifaspp:player fifaplg:{new_player["id"]} .
                     <{old_player["squadPlayerId"]}> fifaspp:position "{new_player["pos"]}"^^xsd:int .
                     """
@@ -153,13 +155,10 @@ def update_squad(guid: str, squad: dict) -> dict:
             <{old_player["squadPlayerId"]}> ?p{old_player["pos"]} ?o{old_player["pos"]} .
             """
 
-    print(old_players_by_pos.keys())
-    print(new_players_by_pos.keys())
-
     for pos in new_players_by_pos:
         if pos not in old_players_by_pos:
             new_player = new_players_by_pos[pos]
-            new_player["squadPlayerId"] = f'http://fifa24/squad_player/guid/{guid+new_player["pos"]}'
+            new_player["squadPlayerId"] = f'http://fifa24/squad_player/guid/{guid}_{new_player["pos"]}'
             new_players.append(new_player)
             insert += f"""
             fifasqg:{guid} fifasqp:player <{new_player["squadPlayerId"]}> .
