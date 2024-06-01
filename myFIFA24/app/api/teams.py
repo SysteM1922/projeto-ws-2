@@ -18,7 +18,6 @@ def get_teams() -> list[dict]:
 
     return result
 
-
 def get_team_by_guid(guid: str) -> dict:
     query = f"""
     PREFIX fifatg: <http://fifa24/team/guid/> 
@@ -35,8 +34,30 @@ def get_team_by_guid(guid: str) -> dict:
         ?teamLeague fifalp:imageUrl ?teamLeagueURL .
     }}"""
 
-    return select(query)
+    result = select(query)
 
+    if not result:
+        return None
+
+    return result
+
+def get_team_name_by_guid(guid: str) -> str:
+    query = f"""
+    PREFIX fifatg: <http://fifa24/team/guid/>
+    PREFIX fifatp: <http://fifa24/team/pred/>
+
+    SELECT ?label
+    WHERE {{
+        fifatg:{guid} fifatp:label ?label .
+    }}
+    """
+
+    result = select(query)
+
+    if not result:
+        return None
+
+    return result[0]["label"]
 
 def get_teams_by_league_guid(guid: str) -> list[dict]:
     query = f"""

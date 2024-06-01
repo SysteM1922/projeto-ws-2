@@ -11,7 +11,7 @@ from django.contrib.auth.models import User
 from .models import Profile
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
-import json
+from .api import wikidata
 import random
 
 @login_required(login_url='login')
@@ -100,7 +100,9 @@ def league_view(request, guid):
 @login_required(login_url='login')
 def team_view(request, guid):
     players = players_api.get_players_by_team_guid(guid)
-    return render(request, 'team.html', {"players": players})
+    team_name = teams_api.get_team_name_by_guid(guid)
+    extra_info = wikidata.get_team_info(team_name)
+    return render(request, 'team.html', {"players": players, "extra": extra_info})
 
 @login_required(login_url='login')
 def players_view(request):
@@ -165,7 +167,8 @@ def players_view(request):
 @login_required(login_url='login')
 def player_view(request, guid):
     player = players_api.get_player_by_guid(guid)
-    return render(request, 'player.html', {'player': player})
+    extra_info = wikidata.get_player_info(player["name"])
+    return render(request, 'player.html', {'player': player, "extra": extra_info})
 
 @require_POST
 def search_players(request):

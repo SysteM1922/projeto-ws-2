@@ -11,7 +11,6 @@ def select(query: str) -> dict:
     payload = {
         "query": query
     }
-    print(query)
     result = accessor.sparql_select(body=payload, repo_name=repo_name)
 
     try:
@@ -29,11 +28,7 @@ def ask(query: str) -> dict:
     payload = {
         "query": query
     }
-    print(query)
     result = accessor.sparql_select(body=payload, repo_name=repo_name)
-
-    print(query)
-    print(result)
 
     try:
         return json.loads(result)["boolean"]
@@ -45,11 +40,7 @@ def update(query: str) -> dict:
     payload = {
         "update": query
     }
-    print(query)
     result = accessor.sparql_update(body=payload, repo_name=repo_name)
-
-    print(query)
-    print(result)
 
     try:
         return json.loads(result)

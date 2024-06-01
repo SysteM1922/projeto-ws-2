@@ -5,8 +5,8 @@
 {% load functions %}
 
 {% include "navbar.html" %}
-<div class="felx py-10">
-    <div class="flex max-w-screen-xl mx-auto py-10 text-white bg-gray-800 bg-opacity-60 rounded-lg">
+<div class="py-10">
+    <div class="flex max-w-screen-xl mx-auto h-full py-10 text-white bg-gray-800 bg-opacity-60 rounded-lg">
         <div class="border-r-2 border-gray-900 px-5">
             <div class="flex flex-col pb-5">
                 <img src="{{ player.card }}" alt="{{ player.name }}" class="w-72 object-contain">
@@ -104,7 +104,7 @@
                 </div>
             </div>
         </div>
-        <div class="w-full">
+        <div class="flex flex-col w-full h-max">
             <div class="flex mb-10">
                 <div class="mx-5 w-full justify-center">
                     <div class="flex pb-2 justify-center">
@@ -524,6 +524,25 @@
                     </div>
                     {% endif %}
                 </div>
+            </div>
+            <div class="flex felx-col text-white w-full h-full p-10 justify-evenly">
+                {% for team in extra %}
+                <div class="flex flex-col items-center w-20">
+                    <div>
+                        {% if team.team_image %}
+                        <img src="{{ team.team_image }}" alt="{{ team.team }}" class="h-20 w-full object-contain">
+                        {% else %}
+                        <img src="https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg"
+                            alt="{{ team.team }}" class="h-20 w-full object-contain">
+                        {% endif %}
+                    </div>
+                    <div>
+                        <p class="text-center mt-2">
+                            {{ team.team }}
+                        </p>
+                    </div>
+                </div>
+                {% endfor %}
             </div>
         </div>
     </div>

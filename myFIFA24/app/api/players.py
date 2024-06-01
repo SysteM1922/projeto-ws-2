@@ -1,8 +1,6 @@
 import json
-import time
 from .utils import select
-
-cache = {}
+from .cache import Cache
 
 def get_nationalities() -> list[dict]:
     query = """
@@ -15,13 +13,8 @@ def get_nationalities() -> list[dict]:
         ORDER BY ?label
         """
     
-    if query in cache:
-        result = cache[query]["result"]
-
-        for query in list(cache):
-            if time.time() - cache[query]["time"] > 300:
-                del cache[query]
-
+    result = Cache.get(query)
+    if result:
         return result
     
     result = select(query)
@@ -29,7 +22,7 @@ def get_nationalities() -> list[dict]:
     for nationality in result:
         nationality["id"] = nationality["nationality"].split("/")[-1]
 
-    cache[query] = {"time": time.time(), "result": result}
+    Cache.set(query, result)
 
     return result
 
@@ -44,13 +37,8 @@ def get_genders() -> list[dict]:
         ORDER BY ?label
         """
     
-    if query in cache:
-        result = cache[query]["result"]
-
-        for query in list(cache):
-            if time.time() - cache[query]["time"] > 300:
-                del cache[query]
-
+    result = Cache.get(query)
+    if result:
         return result
     
     result = select(query)
@@ -58,7 +46,7 @@ def get_genders() -> list[dict]:
     for gender in result:
         gender["id"] = gender["gender"].split("/")[-1]
 
-    cache[query] = {"time": time.time(), "result": result}
+    Cache.set(query, result)
 
     return result
 
@@ -73,13 +61,8 @@ def get_positions() -> list[dict]:
         }
         """
     
-    if query in list(cache):
-        result = cache[query]["result"]
-
-        for query in cache:
-            if time.time() - cache[query]["time"] > 300:
-                del cache[query]
-
+    result = Cache.get(query)
+    if result:
         return result
     
     ret = [{"label": "GK", "id": None},
@@ -106,7 +89,7 @@ def get_positions() -> list[dict]:
             if pos["label"] == position["label"]:
                 position["id"] = pos["positionid"].split("/")[-1]
 
-    cache[query] = {"time": time.time(), "result": ret}
+    Cache.set(query, ret)
 
     return ret
 
@@ -282,13 +265,8 @@ def get_players_by_prop(start: int = 0, limit: int = 30, props: dict = None) -> 
         LIMIT {limit}
         """
     
-    if query in list(cache):
-
-        result = cache[query]["result"]
-        for query in cache:
-            if time.time() - cache[query]["time"] > 300:
-                del cache[query]
-        
+    result = Cache.get(query)
+    if result:
         return result
 
     result = select(query)
@@ -298,7 +276,7 @@ def get_players_by_prop(start: int = 0, limit: int = 30, props: dict = None) -> 
         player["teamid"] = player["teamid"].split("/")[-1]
         player["stats"] = json.loads(player["stats"])
 
-    cache[query] = {"time": time.time(), "result": result}
+    Cache.set(query, result)
 
     return result
 
@@ -388,13 +366,8 @@ def get_players_by_team_guid(guid: str) -> list[dict]:
         ORDER BY DESC(?ovr) ?name
         """
 
-    if query in cache:
-        result = cache[query]["result"]
-
-        for query in list(cache):
-            if time.time() - cache[query]["time"] > 300:
-                del cache[query]
-
+    result = Cache.get(query)
+    if result:
         return result
     
     result = select(query)
@@ -403,7 +376,7 @@ def get_players_by_team_guid(guid: str) -> list[dict]:
         player["id"] = player["playerid"].split("/")[-1]
         player["stats"] = json.loads(player["stats"])
 
-    cache[query] = {"time": time.time(), "result": result}
+    Cache.set(query, result)
 
     return result
 
