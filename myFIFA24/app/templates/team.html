@@ -9,36 +9,40 @@
 <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto py-10">
     <div class="container flex justify-between mx-auto my-10 items-center h-96 text-white">
         <div class="h-full pr-5 w-1/2 border-r-2 flex flex-col items-center">
-            <div class="flex flex-col h-5/6 justify-center">
-                {% if extra.stadium_image %}
+            <a href="{{ extra.stadium_url }}" class="flex flex-col h-full">
+                <div class="flex flex-col h-5/6 justify-center">
+                    {% if extra.stadium_image %}
                     <img src="{{ extra.stadium_image }}" alt="{{ extra.stadium }}"
                         class="rounded-2xl object-contain w-full h-full" />
-                {% else %}
-                <img src="https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg" alt="{{ extra.stadium }}"
-                    class="rounded-2xl object-contain w-full h-full" />
-                {% endif %}
-            </div>
-            <div class="h-1/6 text-xl font-extrabold">
-                <p class="text-center pt-5">
-                    {{ extra.stadium }} ({{ extra.capacity }} seats)
-                </p>
-            </div>
+                    {% else %}
+                    <img src="https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg"
+                        alt="{{ extra.stadium }}" class="rounded-2xl object-contain w-full h-full" />
+                    {% endif %}
+                </div>
+                <div class="h-1/6 text-xl font-extrabold">
+                    <p class="text-center pt-5">
+                        {{ extra.stadium }} ({{ extra.capacity }} seats)
+                    </p>
+                </div>
+            </a>
         </div>
         <div class="h-full pl-5 w-1/2 border-l-2 flex flex-col items-center">
-            <div class="flex h-5/6">
-                {% if extra.coach_image %}
-                <img src="{{ extra.coach_image }}" alt="{{ extra.coach }}"
-                    class="rounded-2xl object-contain w-full h-full" />
-                {% else %}
-                <img src="https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg" alt="{{ extra.coach }}"
-                    class="rounded-2xl object-contain w-full h-full" />
-                {% endif %}
-            </div>
-            <div class="h-1/6 text-xl font-extrabold">
-                <p class="text-center pt-5">
-                    {{ extra.coach }}
-                </p>
-            </div>
+            <a href="{{ extra.coach_url }}" class="flex flex-col h-full">
+                <div class="flex h-5/6">
+                    {% if extra.coach_image %}
+                    <img src="{{ extra.coach_image }}" alt="{{ extra.coach }}"
+                        class="rounded-2xl object-contain w-full h-full" />
+                    {% else %}
+                    <img src="https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg"
+                        alt="{{ extra.coach }}" class="rounded-2xl object-contain w-full h-full" />
+                    {% endif %}
+                </div>
+                <div class="h-1/6 text-xl font-extrabold">
+                    <p class="text-center pt-5">
+                        {{ extra.coach }}
+                    </p>
+                </div>
+            </a>
         </div>
     </div>
     <div class="container mx-auto h-10">

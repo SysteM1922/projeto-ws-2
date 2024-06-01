@@ -26,7 +26,7 @@ def get_team_info(team_name):
         team_q = sparql.query().bindings[0]["item"].value
 
         query_2 = f"""
-        SELECT DISTINCT ?stad ?image ?coachName ?coachImage ?capacity
+        SELECT DISTINCT ?stadium ?stad ?image ?coach ?coachName ?coachImage ?capacity
         WHERE {{
             OPTIONAL{{
                 <{team_q}> wdt:P115 ?stadium .
@@ -67,9 +67,11 @@ def get_team_info(team_name):
     ret = {
         "stadium": results["stad"].value if "stad" in results else None,
         "stadium_image": results["image"].value if "image" in results else None,
+        "stadium_url": results["stadium"].value if "stadium" in results else None,
         "capacity": results["capacity"].value if "capacity" in results else None,
         "coach": results["coachName"].value if "coachName" in results else None,
-        "coach_image": results["coachImage"].value if "coachImage" in results else None
+        "coach_image": results["coachImage"].value if "coachImage" in results else None,
+        "coach_url": results["coach"].value if "coach" in results else None,
     }
 
     Cache.set(query, ret)
@@ -101,7 +103,7 @@ def get_player_info(player_name):
         player_q = sparql.query().bindings[0]["item"].value
 
         query_2 = f"""
-        SELECT DISTINCT ?teamName ?teamImg
+        SELECT DISTINCT ?team ?teamName ?teamImg
         WHERE{{
             <{player_q}> p:P54 ?card .
             ?card ps:P54 ?team .
@@ -126,16 +128,19 @@ def get_player_info(player_name):
 
         team_names = []
         team_imgs = []
+        team_urls = []
 
         for result in results:
             if "national" not in result["teamName"].value:
                 team_names.append(result["teamName"].value)
                 team_imgs.append(result["teamImg"].value if "teamImg" in result else None)
+                team_urls.append(result["team"].value)
 
         last_team = "00000000"
         for team in reversed(list(team_names)):
             if last_team in team:
                 team_imgs.pop(team_names.index(team))
+                team_urls.pop(team_names.index(team))
                 team_names.remove(team)
             else:
                 last_team = team
@@ -143,7 +148,8 @@ def get_player_info(player_name):
         for i in range(len(team_names)):
             ret.append({
                 "team": team_names[i],
-                "team_image": team_imgs[i]
+                "team_image": team_imgs[i],
+                "team_url": team_urls[i],
             })
 
     except IndexError:
