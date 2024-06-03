@@ -42,7 +42,9 @@ def get_team_info(team_name):
             OPTIONAL{{
                 <{team_q}> p:P286 ?card .
                 ?card ps:P286 ?coach .
-                ?card pq:P580 ?start_date .
+                OPTIONAL{{
+                    ?card pq:P580 ?start_date .
+                }}
                 OPTIONAL{{
                     ?card pq:P582 ?end_date .
                 }}
@@ -53,7 +55,7 @@ def get_team_info(team_name):
                 ?coach wdt:P18 ?coachImage .
             }}
         }}
-        ORDER BY DESC(?start_date) DESC(?end_date)
+        ORDER BY DESC(?start_date) DESC(?end_date) ?coachName
         LIMIT 1
         """
 
@@ -107,7 +109,9 @@ def get_player_info(player_name):
         WHERE{{
             <{player_q}> p:P54 ?card .
             ?card ps:P54 ?team .
-            ?card pq:P580 ?start_date .
+            OPTIONAL {{
+                ?card pq:P580 ?start_date .
+            }}
             OPTIONAL{{
                 ?card pq:P582 ?end_date .
             }}
@@ -131,7 +135,7 @@ def get_player_info(player_name):
         team_urls = []
 
         for result in results:
-            if "national" not in result["teamName"].value:
+            if "national" not in result["teamName"].value.lower() and "national" not in result["teamName"].value.lower():
                 team_names.append(result["teamName"].value)
                 team_imgs.append(result["teamImg"].value if "teamImg" in result else None)
                 team_urls.append(result["team"].value)
