@@ -5,586 +5,587 @@
 {% load functions %}
 
 {% include "navbar.html" %}
-<div class="py-10">
-    <div class="flex max-w-screen-xl mx-auto h-full py-10 text-white bg-gray-800 bg-opacity-60 rounded-lg" xmlns:fifaplp="http://fifa24/player/pred/" xmlns:fifaplg="http://fifa24/player/guid/" xmlns:fifagg="http://fifa24/gender/guid/" xmlns:fifang="http://fifa24/nationality/guid/" xmlns:fifatg="http://fifa24/team/guid/" xmlns:fifatp="http://fifa24/team/pred/" typeof="fifaplp:Player" about="fifaplg:{{ player.playerid }}">
-        <div class="border-r-2 border-gray-900 px-5">
-            <div class="flex flex-col pb-5">
-                <img src="{{ player.card }}" alt="{{ player.name }}" class="w-72 object-contain" property="fifaplp:shieldUrl">
-            </div>
-            <div class="flex">
-                <div class="flex flex-col mr-5">
-                    <span class="flex items-center h-8">
-                        Name
-                    </span>
-                    <span class="flex items-center h-8">
-                        Team
-                    </span>
-                    <span class="flex items-center h-8">
-                        Nation
-                    </span>
-                    <span class="flex items-center h-8">
-                        Gender
-                    </span>
-                    <span class="flex items-center h-8">
-                        Skills
-                    </span>
-                    <span class="flex items-center h-8">
-                        Weak Foot
-                    </span>
-                    <span class="flex items-center h-8">
-                        Foot
-                    </span>
-                    <span class="flex items-center h-8">
-                        Height
-                    </span>
-                    <span class="flex items-center h-8">
-                        Weight
-                    </span>
-                    <span class="flex items-center h-8">
-                        Att. WR
-                    </span>
-                    <span class="flex items-center h-8">
-                        Def. WR
-                    </span>
-                    <span class="flex items-center h-8">
-                        Age
-                    </span>
+<div class="py-10" xmlns:fifa="http://fifa24/" typeof="fifa:player/pred/Player" about="fifa:player/guid/{{ player.playerid }}">
+    <div class="flex max-w-screen-xl mx-auto h-full py-10 text-white bg-gray-800 bg-opacity-60 rounded-lg">
+        
+            <div class="border-r-2 border-gray-900 px-5">
+                <div class="flex flex-col pb-5">
+                    <img src="{{ player.card }}" alt="{{ player.name }}" class="w-72 object-contain" property="fifa:player/pred/shieldUrl">
                 </div>
-                <div class="flex flex-col">
-                    <span class="font-bold items-center h-8" property="fifaplp:name">
-                        {{ player.name }}
-                    </span>
-                    <span class="flex items-center h-8" property="fifaplp:team">
-                        <img src="{{ player.team }}" alt="{{ player.teamName }}" class="h-8 object-contain mr-2" property="fifatp:imageUrl">
-                        <a href="/team/{{ player.teamid }}" class="underline hover:text-blue-500" >
-                            <span>{{ player.teamName }}</span>
-                        </a>
-                    </span>
-                    <span class="flex items-center h-8">
-                        <img src="{{ player.flag }}" alt="{{ player.nationality }}" class="h-8 object-contain mr-2" property="fifaplp:nation" resource="fifang:{{player.nationality}}">
-                        {{ player.nationality }}
-                    </span>
-                    <span class="flex items-center h-8" property="fifaplp:gender" resource="fifagg:{{player.gender}}">
-                        {{ player.gender }}
-                    </span>
-                    <span class="flex items-center h-8" property="fifaplp:skillMoves">
-                        {{ player.skills }}
-                        <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
-                            height="24" fill="currentColor" viewBox="0 0 24 24">
-                            <path
-                                d="M13.849 4.22c-.684-1.626-3.014-1.626-3.698 0L8.397 8.387l-4.552.361c-1.775.14-2.495 2.331-1.142 3.477l3.468 2.937-1.06 4.392c-.413 1.713 1.472 3.067 2.992 2.149L12 19.35l3.897 2.354c1.52.918 3.405-.436 2.992-2.15l-1.06-4.39 3.468-2.938c1.353-1.146.633-3.336-1.142-3.477l-4.552-.36-1.754-4.17Z" />
-                        </svg>
-                    </span>
-                    <span class="flex items-center h-8" property="fifaplp:weakFootAbility">
-                        {{ player.weakfoot }}
-                        <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
-                            height="24" fill="currentColor" viewBox="0 0 24 24">
-                            <path
-                                d="M13.849 4.22c-.684-1.626-3.014-1.626-3.698 0L8.397 8.387l-4.552.361c-1.775.14-2.495 2.331-1.142 3.477l3.468 2.937-1.06 4.392c-.413 1.713 1.472 3.067 2.992 2.149L12 19.35l3.897 2.354c1.52.918 3.405-.436 2.992-2.15l-1.06-4.39 3.468-2.938c1.353-1.146.633-3.336-1.142-3.477l-4.552-.36-1.754-4.17Z" />
-                        </svg>
-                    </span>
-                    <span class="flex items-center h-8" property="fifaplp:preferredFoot">
-                        {{ player.foot|compute_foot }}
-                    </span>
-                    <span class="flex items-center h-8" property="fifaplp:height">
-                        {{ player.height }} cm
-                    </span>
-                    <span class="flex items-center h-8" property="fifaplp:weight">
-                        {{ player.weight }} kg
-                    </span>
-                    <span class="flex items-center h-8" property="fifaplp:attackingWorkRate">
-                        {{ player.attwr|compute_full_wr }}
-                    </span>
-                    <span class="flex items-center h-8" property="fifaplp:defensiveWorkRate">
-                        {{ player.defwr|compute_full_wr }}
-                    </span>
-                    <span class="flex items-center h-8" property="fifaplp:age">
-                        {{ player.birth|compute_age }} years old
-                    </span>
-                </div>
-            </div>
-        </div>
-        <div class="flex flex-col w-full h-max" rel="fifaplp:Stats">
-            <div class="flex mb-10" >
-                <div class="mx-5 w-full justify-center">
-                    <div class="flex pb-2 justify-center">
-                        <span class="text-2xl font-bold">
-                            {% if player.position == 'GK' %}
-                            Diving
-                            {% else %}
-                            Pace
-                            {% endif %}
+                <div class="flex">
+                    <div class="flex flex-col mr-5">
+                        <span class="flex items-center h-8">
+                            Name
                         </span>
-                        {% if player.position == 'GK' %}
-                        <span class="flex flex-col w-full items-end text-2xl font-bold" property="fifaplp:Diving">
-                            {{ player.stats.pac }}
+                        <span class="flex items-center h-8">
+                            Team
                         </span>
-                        {% else %}
-                        <span class="flex flex-col w-full items-end text-2xl font-bold" property="fifaplp:Pace">
-                            {{ player.stats.pac }}
+                        <span class="flex items-center h-8">
+                            Nation
                         </span>
-                        {% endif %}
-                    </div>
-                    <div class="w-full bg-gray-900 rounded-full h-2.5 dark:bg-gray-700">
-                        <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{ player.stats.pac }}%"></div>
-                    </div>
-                    {% if player.position == 'GK' %}
-                    <div class="flex justify-center pt-2">
-                        <span class="w-full text-lg">
-                            Diving
+                        <span class="flex items-center h-8">
+                            Gender
                         </span>
-                        <span class="flex flex-col items-end text-lg" property="fifaplp:diving">
-                            {{ player.stats.gkDiving }}
+                        <span class="flex items-center h-8">
+                            Skills
+                        </span>
+                        <span class="flex items-center h-8">
+                            Weak Foot
+                        </span>
+                        <span class="flex items-center h-8">
+                            Foot
+                        </span>
+                        <span class="flex items-center h-8">
+                            Height
+                        </span>
+                        <span class="flex items-center h-8">
+                            Weight
+                        </span>
+                        <span class="flex items-center h-8">
+                            Att. WR
+                        </span>
+                        <span class="flex items-center h-8">
+                            Def. WR
+                        </span>
+                        <span class="flex items-center h-8">
+                            Age
                         </span>
                     </div>
-                    {% else %}
-                    <div class="flex justify-center pt-2">
-                        <span class="w-full text-lg">
-                            Acceleration
+                    <div class="flex flex-col">
+                        <span class="font-bold items-center h-8" property="fifa:player/pred/name">
+                            {{ player.name }}
                         </span>
-                        <span class="flex flex-col items-end text-lg" property="fifaplp:acceleration">
-                            {{ player.stats.acceleration }}
+                        <span class="flex items-center h-8" property="fifa:player/pred/team">
+                            <img src="{{ player.team }}" alt="{{ player.teamName }}" class="h-8 object-contain mr-2" property="fifa:team/pred/imageUrl">
+                            <a href="/team/{{ player.teamid }}" class="underline hover:text-blue-500" >
+                                <span>{{ player.teamName }}</span>
+                            </a>
                         </span>
-                    </div>
-                    <div class="flex justify-center">
-                        <span class="w-full text-lg">
-                            Sprint Speed
+                        <span class="flex items-center h-8">
+                            <img src="{{ player.flag }}" alt="{{ player.nationality }}" class="h-8 object-contain mr-2" property="fifa:player/pred/nation" resource="fifa:nationality/guid/{{player.nationality}}">
+                            {{ player.nationality }}
                         </span>
-                        <span class="flex flex-col items-end text-lg" property="fifaplp:sprintSpeed">
-                            {{ player.stats.sprintSpeed }}
+                        <span class="flex items-center h-8" property="fifa:player/pred/gender" resource="fifa:gender/guid/{{player.gender}}">
+                            {{ player.gender }}
                         </span>
-                    </div>
-                    {% endif %}
-                </div>
-                <div class="mx-5 w-full justify-center">
-                    <div class="flex pb-2 justify-center">
-                        <span class="text-2xl font-bold">
-                            {% if player.position == 'GK' %}
-                            Handling
-                            {% else %}
-                            Shooting
-                            {% endif %}
+                        <span class="flex items-center h-8" property="fifa:player/pred/skillMoves">
+                            {{ player.skills }}
+                            <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M13.849 4.22c-.684-1.626-3.014-1.626-3.698 0L8.397 8.387l-4.552.361c-1.775.14-2.495 2.331-1.142 3.477l3.468 2.937-1.06 4.392c-.413 1.713 1.472 3.067 2.992 2.149L12 19.35l3.897 2.354c1.52.918 3.405-.436 2.992-2.15l-1.06-4.39 3.468-2.938c1.353-1.146.633-3.336-1.142-3.477l-4.552-.36-1.754-4.17Z" />
+                            </svg>
                         </span>
-                        {% if player.position == 'GK' %}
-                        <span class="flex flex-col w-full items-end text-2xl font-bold" property="fifaplp:Handling">
-                            {{ player.stats.sho }}
+                        <span class="flex items-center h-8" property="fifa:player/pred/weakFootAbility">
+                            {{ player.weakfoot }}
+                            <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M13.849 4.22c-.684-1.626-3.014-1.626-3.698 0L8.397 8.387l-4.552.361c-1.775.14-2.495 2.331-1.142 3.477l3.468 2.937-1.06 4.392c-.413 1.713 1.472 3.067 2.992 2.149L12 19.35l3.897 2.354c1.52.918 3.405-.436 2.992-2.15l-1.06-4.39 3.468-2.938c1.353-1.146.633-3.336-1.142-3.477l-4.552-.36-1.754-4.17Z" />
+                            </svg>
                         </span>
-                        {% else %}
-                        <span class="flex flex-col w-full items-end text-2xl font-bold" property="fifaplp:Shooting">
-                            {{ player.stats.sho }}
+                        <span class="flex items-center h-8" property="fifa:player/pred/preferredFoot">
+                            {{ player.foot|compute_foot }}
                         </span>
-                        {% endif %}
-                        
-                    </div>
-                    <div class="w-full bg-gray-900 rounded-full h-2.5 dark:bg-gray-700">
-                        <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{ player.stats.sho }}%"></div>
-                    </div>
-                    {% if player.position == 'GK' %}
-                    <div class="flex justify-center pt-2">
-                        <span class="w-full text-lg">
-                            Handling
+                        <span class="flex items-center h-8" property="fifa:player/pred/height">
+                            {{ player.height }} cm
                         </span>
-                        <span class="flex flex-col items-end text-lg" property="fifaplp:handling">
-                            {{ player.stats.gkHandling }}
+                        <span class="flex items-center h-8" property="fifa:player/pred/weight">
+                            {{ player.weight }} kg
                         </span>
-                    </div>
-                    {% else %}
-                    <div class="flex justify-center pt-2">
-                        <span class="w-full text-lg">
-                            Positioning
+                        <span class="flex items-center h-8" property="fifa:player/pred/attackingWorkRate">
+                            {{ player.attwr|compute_full_wr }}
                         </span>
-                        <span class="flex flex-col items-end text-lg" property="fifaplp:positioning">
-                            {{ player.stats.positioning }}
+                        <span class="flex items-center h-8" property="fifa:player/pred/defensiveWorkRate">
+                            {{ player.defwr|compute_full_wr }}
+                        </span>
+                        <span class="flex items-center h-8" property="fifa:player/pred/age">
+                            {{ player.birth|compute_age }} years old
                         </span>
                     </div>
-                    <div class="flex justify-center">
-                        <span class="w-full text-lg">
-                            Finishing
-                        </span>
-                        <span class="flex flex-col items-end text-lg" property="fifaplp:finishing">
-                            {{ player.stats.finishing }}
-                        </span>
-                    </div>
-                    <div class="flex justify-center">
-                        <span class="w-full text-lg">
-                            Shot Power
-                        </span>
-                        <span class="flex flex-col items-end text-lg" property="fifaplp:shotPower">
-                            {{ player.stats.shotPower }}
-                        </span>
-                    </div>
-                    <div class="flex justify-center">
-                        <span class="w-full text-lg">
-                            Long Shots
-                        </span>
-                        <span class="flex flex-col items-end text-lg" property="fifaplp:longShots">
-                            {{ player.stats.longShots }}
-                        </span>
-                    </div>
-                    <div class="flex justify-center">
-                        <span class="w-full text-lg">
-                            Volleys
-                        </span>
-                        <span class="flex flex-col items-end text-lg" property="fifaplp:volleys">
-                            {{ player.stats.volleys }}
-                        </span>
-                    </div>
-                    <div class="flex justify-center">
-                        <span class="w-full text-lg">
-                            Penalties
-                        </span>
-                        <span class="flex flex-col items-end text-lg" property="fifaplp:penalties">
-                            {{ player.stats.penalties }}
-                        </span>
-                    </div>
-                    {% endif %}
-                </div>
-                <div class="mx-5 w-full justify-center">
-                    <div class="flex pb-2 justify-center">
-                        <span class="text-2xl font-bold">
-                            {% if player.position == 'GK' %}
-                            Kicking
-                            {% else %}
-                            Passing
-                            {% endif %}
-                        </span>
-                        {% if player.position == 'GK' %}
-                        <span class="flex flex-col w-full items-end text-2xl font-bold" property="fifaplp:Kicking">
-                            {{ player.stats.pas }}
-                        </span>
-                        {% else %}
-                        <span class="flex flex-col w-full items-end text-2xl font-bold" property="fifaplp:Passing">
-                            {{ player.stats.pas }}
-                        </span>
-                        {% endif %}
-                    </div>
-                    <div class="w-full bg-gray-900 rounded-full h-2.5 dark:bg-gray-700">
-                        <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{ player.stats.pas }}%"></div>
-                    </div>
-                    {% if player.position == 'GK' %}
-                    <div class="flex justify-center pt-2">
-                        <span class="w-full text-lg">
-                            Kicking
-                        </span>
-                        <span class="flex flex-col items-end text-lg" property="fifaplp:kicking">
-                            {{ player.stats.gkKicking }}
-                        </span>
-                    </div>
-                    {% else %}
-                    <div class="flex justify-center pt-2">
-                        <span class="w-full text-lg">
-                            Vision
-                        </span>
-                        <span class="flex flex-col items-end text-lg" property="fifaplp:vision">
-                            {{ player.stats.vision }}
-                        </span>
-                    </div>
-                    <div class="flex justify-center">
-                        <span class="w-full text-lg">
-                            Crossing
-                        </span>
-                        <span class="flex flex-col items-end text-lg" property="fifaplp:crossing">
-                            {{ player.stats.crossing }}
-                        </span>
-                    </div>
-                    <div class="flex justify-center">
-                        <span class="w-full text-lg">
-                            FK. Accuracy
-                        </span>
-                        <span class="flex flex-col items-end text-lg" property="fifaplp:fkAccuracy">
-                            {{ player.stats.freeKickAccuracy }}
-                        </span>
-                    </div>
-                    <div class="flex justify-center">
-                        <span class="w-full text-lg">
-                            Short Passing
-                        </span>
-                        <span class="flex flex-col items-end text-lg" property="fifaplp:shortPassing">
-                            {{ player.stats.shortPassing }}
-                        </span>
-                    </div>
-                    <div class="flex justify-center">
-                        <span class="w-full text-lg">
-                            Long Passing
-                        </span>
-                        <span class="flex flex-col items-end text-lg" property="fifaplp:longPassing">
-                            {{ player.stats.longPassing }}
-                        </span>
-                    </div>
-                    <div class="flex justify-center">
-                        <span class="w-full text-lg">
-                            Curve
-                        </span>
-                        <span class="flex flex-col items-end text-lg" property="fifaplp:curve">
-                            {{ player.stats.curve }}
-                        </span>
-                    </div>
-                    {% endif %}
                 </div>
             </div>
-            <div class="flex" >
-                <div class="mx-5 w-full justify-center" >
-                    <div class="flex pb-2 justify-center">
-                        <span class="text-2xl font-bold">
+            <div class="flex flex-col w-full">
+            <div class="flex flex-col w-full h-max" rel="fifa:player/pred/Stats" typeof="fifa:player/guid/Stats">
+                <div class="flex mb-10">
+                    <div class="mx-5 w-full justify-center">
+                        <div class="flex pb-2 justify-center">
+                            <span class="text-2xl font-bold">
+                                {% if player.position == 'GK' %}
+                                Diving
+                                {% else %}
+                                Pace
+                                {% endif %}
+                            </span>
                             {% if player.position == 'GK' %}
-                            Reflexes
+                            <span class="flex flex-col w-full items-end text-2xl font-bold" property="fifa:player/pred/Diving">
+                                {{ player.stats.pac }}
+                            </span>
                             {% else %}
-                            Dribbling
+                            <span class="flex flex-col w-full items-end text-2xl font-bold" property="fifa:player/pred/Pace">
+                                {{ player.stats.pac }}
+                            </span>
                             {% endif %}
-                        </span>
+                        </div>
+                        <div class="w-full bg-gray-900 rounded-full h-2.5 dark:bg-gray-700">
+                            <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{ player.stats.pac }}%"></div>
+                        </div>
                         {% if player.position == 'GK' %}
-                        <span class="flex flex-col w-full items-end text-2xl font-bold" property="fifaplp:Reflexes">
-                            {{ player.stats.dri }}
-                        </span>
+                        <div class="flex justify-center pt-2">
+                            <span class="w-full text-lg">
+                                Diving
+                            </span>
+                            <span class="flex flex-col items-end text-lg" property="fifa:player/pred/diving">
+                                {{ player.stats.gkDiving }}
+                            </span>
+                        </div>
                         {% else %}
-                        <span class="flex flex-col w-full items-end text-2xl font-bold" property="fifaplp:Dribbling">
-                            {{ player.stats.dri }}
-                        </span>
+                        <div class="flex justify-center pt-2">
+                            <span class="w-full text-lg">
+                                Acceleration
+                            </span>
+                            <span class="flex flex-col items-end text-lg" property="fifa:player/pred/acceleration">
+                                {{ player.stats.acceleration }}
+                            </span>
+                        </div>
+                        <div class="flex justify-center">
+                            <span class="w-full text-lg">
+                                Sprint Speed
+                            </span>
+                            <span class="flex flex-col items-end text-lg" property="fifa:player/pred/sprintSpeed">
+                                {{ player.stats.sprintSpeed }}
+                            </span>
+                        </div>
                         {% endif %}
                     </div>
-                    <div class="w-full bg-gray-900 rounded-full h-2.5 dark:bg-gray-700">
-                        <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{ player.stats.dri }}%"></div>
+                    <div class="mx-5 w-full justify-center">
+                        <div class="flex pb-2 justify-center">
+                            <span class="text-2xl font-bold">
+                                {% if player.position == 'GK' %}
+                                Handling
+                                {% else %}
+                                Shooting
+                                {% endif %}
+                            </span>
+                            {% if player.position == 'GK' %}
+                            <span class="flex flex-col w-full items-end text-2xl font-bold" property="fifa:player/pred/Handling">
+                                {{ player.stats.sho }}
+                            </span>
+                            {% else %}
+                            <span class="flex flex-col w-full items-end text-2xl font-bold" property="fifa:player/pred/Shooting">
+                                {{ player.stats.sho }}
+                            </span>
+                            {% endif %}
+
+                        </div>
+                        <div class="w-full bg-gray-900 rounded-full h-2.5 dark:bg-gray-700">
+                            <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{ player.stats.sho }}%"></div>
+                        </div>
+                        {% if player.position == 'GK' %}
+                        <div class="flex justify-center pt-2">
+                            <span class="w-full text-lg">
+                                Handling
+                            </span>
+                            <span class="flex flex-col items-end text-lg" property="fifa:player/pred/handling">
+                                {{ player.stats.gkHandling }}
+                            </span>
+                        </div>
+                        {% else %}
+                        <div class="flex justify-center pt-2">
+                            <span class="w-full text-lg">
+                                Positioning
+                            </span>
+                            <span class="flex flex-col items-end text-lg" property="fifa:player/pred/positioning">
+                                {{ player.stats.positioning }}
+                            </span>
+                        </div>
+                        <div class="flex justify-center">
+                            <span class="w-full text-lg">
+                                Finishing
+                            </span>
+                            <span class="flex flex-col items-end text-lg" property="fifa:player/pred/finishing">
+                                {{ player.stats.finishing }}
+                            </span>
+                        </div>
+                        <div class="flex justify-center">
+                            <span class="w-full text-lg">
+                                Shot Power
+                            </span>
+                            <span class="flex flex-col items-end text-lg" property="fifa:player/pred/shotPower">
+                                {{ player.stats.shotPower }}
+                            </span>
+                        </div>
+                        <div class="flex justify-center">
+                            <span class="w-full text-lg">
+                                Long Shots
+                            </span>
+                            <span class="flex flex-col items-end text-lg" property="fifa:player/pred/longShots">
+                                {{ player.stats.longShots }}
+                            </span>
+                        </div>
+                        <div class="flex justify-center">
+                            <span class="w-full text-lg">
+                                Volleys
+                            </span>
+                            <span class="flex flex-col items-end text-lg" property="fifa:player/pred/volleys">
+                                {{ player.stats.volleys }}
+                            </span>
+                        </div>
+                        <div class="flex justify-center">
+                            <span class="w-full text-lg">
+                                Penalties
+                            </span>
+                            <span class="flex flex-col items-end text-lg" property="fifa:player/pred/penalties">
+                                {{ player.stats.penalties }}
+                            </span>
+                        </div>
+                        {% endif %}
                     </div>
-                    {% if player.position == 'GK' %}
-                    <div class="flex justify-center pt-2">
-                        <span class="w-full text-lg">
-                            Reflexes
-                        </span>
-                        <span class="flex flex-col items-end text-lg" property="fifaplp:reflexes">
-                            {{ player.stats.gkReflexes }}
-                        </span>
+                    <div class="mx-5 w-full justify-center">
+                        <div class="flex pb-2 justify-center">
+                            <span class="text-2xl font-bold">
+                                {% if player.position == 'GK' %}
+                                Kicking
+                                {% else %}
+                                Passing
+                                {% endif %}
+                            </span>
+                            {% if player.position == 'GK' %}
+                            <span class="flex flex-col w-full items-end text-2xl font-bold" property="fifa:player/pred/Kicking">
+                                {{ player.stats.pas }}
+                            </span>
+                            {% else %}
+                            <span class="flex flex-col w-full items-end text-2xl font-bold" property="fifa:player/pred/Passing">
+                                {{ player.stats.pas }}
+                            </span>
+                            {% endif %}
+                        </div>
+                        <div class="w-full bg-gray-900 rounded-full h-2.5 dark:bg-gray-700">
+                            <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{ player.stats.pas }}%"></div>
+                        </div>
+                        {% if player.position == 'GK' %}
+                        <div class="flex justify-center pt-2">
+                            <span class="w-full text-lg">
+                                Kicking
+                            </span>
+                            <span class="flex flex-col items-end text-lg" property="fifa:player/pred/kicking">
+                                {{ player.stats.gkKicking }}
+                            </span>
+                        </div>
+                        {% else %}
+                        <div class="flex justify-center pt-2">
+                            <span class="w-full text-lg">
+                                Vision
+                            </span>
+                            <span class="flex flex-col items-end text-lg" property="fifa:player/pred/vision">
+                                {{ player.stats.vision }}
+                            </span>
+                        </div>
+                        <div class="flex justify-center">
+                            <span class="w-full text-lg">
+                                Crossing
+                            </span>
+                            <span class="flex flex-col items-end text-lg" property="fifa:player/pred/crossing">
+                                {{ player.stats.crossing }}
+                            </span>
+                        </div>
+                        <div class="flex justify-center">
+                            <span class="w-full text-lg">
+                                FK. Accuracy
+                            </span>
+                            <span class="flex flex-col items-end text-lg" property="fifa:player/pred/fkAccuracy">
+                                {{ player.stats.freeKickAccuracy }}
+                            </span>
+                        </div>
+                        <div class="flex justify-center">
+                            <span class="w-full text-lg">
+                                Short Passing
+                            </span>
+                            <span class="flex flex-col items-end text-lg" property="fifa:player/pred/shortPassing">
+                                {{ player.stats.shortPassing }}
+                            </span>
+                        </div>
+                        <div class="flex justify-center">
+                            <span class="w-full text-lg">
+                                Long Passing
+                            </span>
+                            <span class="flex flex-col items-end text-lg" property="fifa:player/pred/longPassing">
+                                {{ player.stats.longPassing }}
+                            </span>
+                        </div>
+                        <div class="flex justify-center">
+                            <span class="w-full text-lg">
+                                Curve
+                            </span>
+                            <span class="flex flex-col items-end text-lg" property="fifa:player/pred/curve">
+                                {{ player.stats.curve }}
+                            </span>
+                        </div>
+                        {% endif %}
                     </div>
-                    {% else %}
-                    <div class="flex justify-center pt-2">
-                        <span class="w-full text-lg">
-                            Agility
-                        </span>
-                        <span class="flex flex-col items-end text-lg" property="fifaplp:agility">
-                            {{ player.stats.agility }}
-                        </span>
-                    </div>
-                    <div class="flex justify-center">
-                        <span class="w-full text-lg">
-                            Balance
-                        </span>
-                        <span class="flex flex-col items-end text-lg" property="fifaplp:balance">
-                            {{ player.stats.balance }}
-                        </span>
-                    </div>
-                    <div class="flex justify-center">
-                        <span class="w-full text-lg">
-                            Reactions
-                        </span>
-                        <span class="flex flex-col items-end text-lg" property="fifaplp:reactions">
-                            {{ player.stats.reactions }}
-                        </span>
-                    </div>
-                    <div class="flex justify-center">
-                        <span class="w-full text-lg">
-                            Ball Control
-                        </span>
-                        <span class="flex flex-col items-end text-lg" property="fifaplp:ballControl">
-                            {{ player.stats.ballControl }}
-                        </span>
-                    </div>
-                    <div class="flex justify-center">
-                        <span class="w-full text-lg">
-                            Dribbling
-                        </span>
-                        <span class="flex flex-col items-end text-lg" property="fifaplp:dribbling">
-                            {{ player.stats.dribbling }}
-                        </span>
-                    </div>
-                    <div class="flex justify-center">
-                        <span class="w-full text-lg">
-                            Composure
-                        </span>
-                        <span class="flex flex-col items-end text-lg" property="fifaplp:composure">
-                            {{ player.stats.composure }}
-                        </span>
-                    </div>
-                    {% endif %}
                 </div>
-                <div class="mx-5 w-full justify-center">
-                    <div class="flex pb-2 justify-center">
-                        <span class="text-2xl font-bold">
+                <div class="flex">
+                    <div class="mx-5 w-full justify-center" >
+                        <div class="flex pb-2 justify-center">
+                            <span class="text-2xl font-bold">
+                                {% if player.position == 'GK' %}
+                                Reflexes
+                                {% else %}
+                                Dribbling
+                                {% endif %}
+                            </span>
                             {% if player.position == 'GK' %}
-                            Speed
+                            <span class="flex flex-col w-full items-end text-2xl font-bold" property="fifa:player/pred/Reflexes">
+                                {{ player.stats.dri }}
+                            </span>
                             {% else %}
-                            Defending
+                            <span class="flex flex-col w-full items-end text-2xl font-bold" property="fifa:player/pred/Dribbling">
+                                {{ player.stats.dri }}
+                            </span>
                             {% endif %}
-                        </span>
+                        </div>
+                        <div class="w-full bg-gray-900 rounded-full h-2.5 dark:bg-gray-700">
+                            <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{ player.stats.dri }}%"></div>
+                        </div>
                         {% if player.position == 'GK' %}
-                        <span class="flex flex-col w-full items-end text-2xl font-bold" property="fifaplp:Speed">
-                            {{ player.stats.def }}
-                        </span>
+                        <div class="flex justify-center pt-2">
+                            <span class="w-full text-lg">
+                                Reflexes
+                            </span>
+                            <span class="flex flex-col items-end text-lg" property="fifa:player/pred/reflexes">
+                                {{ player.stats.gkReflexes }}
+                            </span>
+                        </div>
                         {% else %}
-                        <span class="flex flex-col w-full items-end text-2xl font-bold" property="fifaplp:Defending">
-                            {{ player.stats.def }}
-                        </span>
+                        <div class="flex justify-center pt-2">
+                            <span class="w-full text-lg">
+                                Agility
+                            </span>
+                            <span class="flex flex-col items-end text-lg" property="fifa:player/pred/agility">
+                                {{ player.stats.agility }}
+                            </span>
+                        </div>
+                        <div class="flex justify-center">
+                            <span class="w-full text-lg">
+                                Balance
+                            </span>
+                            <span class="flex flex-col items-end text-lg" property="fifa:player/pred/balance">
+                                {{ player.stats.balance }}
+                            </span>
+                        </div>
+                        <div class="flex justify-center">
+                            <span class="w-full text-lg">
+                                Reactions
+                            </span>
+                            <span class="flex flex-col items-end text-lg" property="fifa:player/pred/reactions">
+                                {{ player.stats.reactions }}
+                            </span>
+                        </div>
+                        <div class="flex justify-center">
+                            <span class="w-full text-lg">
+                                Ball Control
+                            </span>
+                            <span class="flex flex-col items-end text-lg" property="fifa:player/pred/ballControl">
+                                {{ player.stats.ballControl }}
+                            </span>
+                        </div>
+                        <div class="flex justify-center">
+                            <span class="w-full text-lg">
+                                Dribbling
+                            </span>
+                            <span class="flex flex-col items-end text-lg" property="fifa:player/pred/dribbling">
+                                {{ player.stats.dribbling }}
+                            </span>
+                        </div>
+                        <div class="flex justify-center">
+                            <span class="w-full text-lg">
+                                Composure
+                            </span>
+                            <span class="flex flex-col items-end text-lg" property="fifa:player/pred/composure">
+                                {{ player.stats.composure }}
+                            </span>
+                        </div>
                         {% endif %}
                     </div>
-                    <div class="w-full bg-gray-900 rounded-full h-2.5 dark:bg-gray-700">
-                        <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{ player.stats.def }}%"></div>
-                    </div>
-                    {% if player.position == 'GK' %}
-                    <div class="flex justify-center pt-2">
-                        <span class="w-full text-lg">
-                            Acceleration
-                        </span>
-                        <span class="flex flex-col items-end text-lg" property="fifaplp:acceleration">
-                            {{ player.stats.acceleration }}
-                        </span>
-                    </div>
-                    <div class="flex justify-center">
-                        <span class="w-full text-lg">
-                            Sprint Speed
-                        </span>
-                        <span class="flex flex-col items-end text-lg" property="fifaplp:sprintSpeed">
-                            {{ player.stats.sprintSpeed }}
-                        </span>
-                    </div>
-                    {% else %}
-                    <div class="flex justify-center pt-2">
-                        <span class="w-full text-lg">
-                            Interceptions
-                        </span>
-                        <span class="flex flex-col items-end text-lg" property="fifaplp:interceptions">
-                            {{ player.stats.interceptions}}
-                        </span>
-                    </div>
-                    <div class="flex justify-center">
-                        <span class="w-full text-lg">
-                            Heading Accuracy
-                        </span>
-                        <span class="flex flex-col items-end text-lg" property="fifaplp:headingAccuracy">
-                            {{ player.stats.headingAccuracy }}
-                        </span>
-                    </div>
-                    <div class="flex justify-center">
-                        <span class="w-full text-lg">
-                            Def. Awareness
-                        </span>
-                        <span class="flex flex-col items-end text-lg" property="fifaplp:defensiveAwareness">
-                            {{ player.stats.defensiveAwareness }}
-                        </span>
-                    </div>
-                    <div class="flex justify-center">
-                        <span class="w-full text-lg">
-                            Standing Tackle
-                        </span>
-                        <span class="flex flex-col items-end text-lg" property="fifaplp:standingTackle">
-                            {{ player.stats.standingTackle }}
-                        </span>
-                    </div>
-                    <div class="flex justify-center">
-                        <span class="w-full text-lg">
-                            Sliding Tackle
-                        </span>
-                        <span class="flex flex-col items-end text-lg" property="fifaplp:slidingTackle">
-                            {{ player.stats.slidingTackle }}
-                        </span>
-                    </div>
-                    {% endif %}
-                </div>
-                <div class="mx-5 w-full justify-center">
-                    <div class="flex pb-2 justify-center">
-                        <span class="text-2xl font-bold">
+                    <div class="mx-5 w-full justify-center">
+                        <div class="flex pb-2 justify-center">
+                            <span class="text-2xl font-bold">
+                                {% if player.position == 'GK' %}
+                                Speed
+                                {% else %}
+                                Defending
+                                {% endif %}
+                            </span>
                             {% if player.position == 'GK' %}
-                            Positioning
+                            <span class="flex flex-col w-full items-end text-2xl font-bold" property="fifa:player/pred/Speed">
+                                {{ player.stats.def }}
+                            </span>
                             {% else %}
-                            Physicality
+                            <span class="flex flex-col w-full items-end text-2xl font-bold" property="fifa:player/pred/Defending">
+                                {{ player.stats.def }}
+                            </span>
                             {% endif %}
-                        </span>
+                        </div>
+                        <div class="w-full bg-gray-900 rounded-full h-2.5 dark:bg-gray-700">
+                            <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{ player.stats.def }}%"></div>
+                        </div>
                         {% if player.position == 'GK' %}
-                        <span class="flex flex-col w-full items-end text-2xl font-bold" property="fifaplp:Positioning">
-                            {{ player.stats.phy }}
-                        </span>
+                        <div class="flex justify-center pt-2">
+                            <span class="w-full text-lg">
+                                Acceleration
+                            </span>
+                            <span class="flex flex-col items-end text-lg" property="fifa:player/pred/acceleration">
+                                {{ player.stats.acceleration }}
+                            </span>
+                        </div>
+                        <div class="flex justify-center">
+                            <span class="w-full text-lg">
+                                Sprint Speed
+                            </span>
+                            <span class="flex flex-col items-end text-lg" property="fifa:player/pred/sprintSpeed">
+                                {{ player.stats.sprintSpeed }}
+                            </span>
+                        </div>
                         {% else %}
-                        <span class="flex flex-col w-full items-end text-2xl font-bold" property="fifaplp:Physicality">
-                            {{ player.stats.phy }}
-                        </span>
+                        <div class="flex justify-center pt-2">
+                            <span class="w-full text-lg">
+                                Interceptions
+                            </span>
+                            <span class="flex flex-col items-end text-lg" property="fifa:player/pred/interceptions">
+                                {{ player.stats.interceptions}}
+                            </span>
+                        </div>
+                        <div class="flex justify-center">
+                            <span class="w-full text-lg">
+                                Heading Accuracy
+                            </span>
+                            <span class="flex flex-col items-end text-lg" property="fifa:player/pred/headingAccuracy">
+                                {{ player.stats.headingAccuracy }}
+                            </span>
+                        </div>
+                        <div class="flex justify-center">
+                            <span class="w-full text-lg">
+                                Def. Awareness
+                            </span>
+                            <span class="flex flex-col items-end text-lg" property="fifa:player/pred/defensiveAwareness">
+                                {{ player.stats.defensiveAwareness }}
+                            </span>
+                        </div>
+                        <div class="flex justify-center">
+                            <span class="w-full text-lg">
+                                Standing Tackle
+                            </span>
+                            <span class="flex flex-col items-end text-lg" property="fifa:player/pred/standingTackle">
+                                {{ player.stats.standingTackle }}
+                            </span>
+                        </div>
+                        <div class="flex justify-center">
+                            <span class="w-full text-lg">
+                                Sliding Tackle
+                            </span>
+                            <span class="flex flex-col items-end text-lg" property="fifa:player/pred/slidingTackle">
+                                {{ player.stats.slidingTackle }}
+                            </span>
+                        </div>
                         {% endif %}
                     </div>
-                    <div class="w-full bg-gray-900 rounded-full h-2.5 dark:bg-gray-700">
-                        <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{ player.stats.phy }}%"></div>
+                    <div class="mx-5 w-full justify-center">
+                        <div class="flex pb-2 justify-center">
+                            <span class="text-2xl font-bold">
+                                {% if player.position == 'GK' %}
+                                Positioning
+                                {% else %}
+                                Physicality
+                                {% endif %}
+                            </span>
+                            {% if player.position == 'GK' %}
+                            <span class="flex flex-col w-full items-end text-2xl font-bold" property="fifa:player/pred/Positioning">
+                                {{ player.stats.phy }}
+                            </span>
+                            {% else %}
+                            <span class="flex flex-col w-full items-end text-2xl font-bold" property="fifa:player/pred/Physicality">
+                                {{ player.stats.phy }}
+                            </span>
+                            {% endif %}
+                        </div>
+                        <div class="w-full bg-gray-900 rounded-full h-2.5 dark:bg-gray-700">
+                            <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{ player.stats.phy }}%"></div>
+                        </div>
+                        {% if player.position == 'GK' %}
+                        <div class="flex justify-center pt-2">
+                            <span class="w-full text-lg">
+                                Positioning
+                            </span>
+                            <span class="flex flex-col items-end text-lg" property="fifa:player/pred/positioning">
+                                {{ player.stats.gkPositioning }}
+                            </span>
+                        </div>
+                        {% else %}
+                        <div class="flex justify-center pt-2">
+                            <span class="w-full text-lg">
+                                Jumping
+                            </span>
+                            <span class="flex flex-col items-end text-lg" property="fifa:player/pred/jumping">
+                                {{ player.stats.jumping }}
+                            </span>
+                        </div>
+                        <div class="flex justify-center">
+                            <span class="w-full text-lg">
+                                Stamina
+                            </span>
+                            <span class="flex flex-col items-end text-lg" property="fifa:player/pred/stamina">
+                                {{ player.stats.stamina }}
+                            </span>
+                        </div>
+                        <div class="flex justify-center">
+                            <span class="w-full text-lg">
+                                Strength
+                            </span>
+                            <span class="flex flex-col items-end text-lg" property="fifa:player/pred/strength">
+                                {{ player.stats.strength }}
+                            </span>
+                        </div>
+                        <div class="flex justify-center">
+                            <span class="w-full text-lg">
+                                Aggression
+                            </span>
+                            <span class="flex flex-col items-end text-lg" property="fifa:player/pred/aggression">
+                                {{ player.stats.aggression }}
+                            </span>
+                        </div>
+                        <div class="flex justify-center">
+                            <span class="w-full text-lg">
+                                Sliding Tackle
+                            </span>
+                            <span class="flex flex-col items-end text-lg" property="fifa:player/pred/slidingTackle">
+                                {{ player.stats.slidingTackle }}
+                            </span>
+                        </div>
+                        {% endif %}
                     </div>
-                    {% if player.position == 'GK' %}
-                    <div class="flex justify-center pt-2">
-                        <span class="w-full text-lg">
-                            Positioning
-                        </span>
-                        <span class="flex flex-col items-end text-lg" property="fifaplp:positioning">
-                            {{ player.stats.gkPositioning }}
-                        </span>
-                    </div>
-                    {% else %}
-                    <div class="flex justify-center pt-2">
-                        <span class="w-full text-lg">
-                            Jumping
-                        </span>
-                        <span class="flex flex-col items-end text-lg" property="fifaplp:jumping">
-                            {{ player.stats.jumping }}
-                        </span>
-                    </div>
-                    <div class="flex justify-center">
-                        <span class="w-full text-lg">
-                            Stamina
-                        </span>
-                        <span class="flex flex-col items-end text-lg" property="fifaplp:stamina">
-                            {{ player.stats.stamina }}
-                        </span>
-                    </div>
-                    <div class="flex justify-center">
-                        <span class="w-full text-lg">
-                            Strength
-                        </span>
-                        <span class="flex flex-col items-end text-lg" property="fifaplp:strength">
-                            {{ player.stats.strength }}
-                        </span>
-                    </div>
-                    <div class="flex justify-center">
-                        <span class="w-full text-lg">
-                            Aggression
-                        </span>
-                        <span class="flex flex-col items-end text-lg" property="fifaplp:aggression">
-                            {{ player.stats.aggression }}
-                        </span>
-                    </div>
-                    <div class="flex justify-center">
-                        <span class="w-full text-lg">
-                            Sliding Tackle
-                        </span>
-                        <span class="flex flex-col items-end text-lg" property="fifaplp:slidingTackle">
-                            {{ player.stats.slidingTackle }}
-                        </span>
-                    </div>
-                    {% endif %}
                 </div>
             </div>
-            
-            <div class="flex felx-col text-white w-full h-full p-10 justify-evenly" >
+            <div class="flex felx-col text-white w-full h-full p-10 justify-evenly" rel="fifa:team/pred/Wikidata">
                 {% for team in extra %}
-                <a href="{{ team.team_url }}"  typeof="fifaplp:Wikidata" >
-                    <div class="flex flex-col items-center w-20 cursor">
-                        <div>
-                            {% if team.team_image %}
-                            <img src="{{ team.team_image }}" alt="{{ team.team }}" class="h-20 w-full object-contain" property="fifatp:imageUrl">
-                            {% else %}
-                            <img src="https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg"
-                                alt="{{ team.team }}" class="h-20 w-full object-contain" property="fifatp:imageUrl">
-                            {% endif %}
+                    <a href="{{ team.team_url }}" typeof="fifa:team/guid/Team" rel="fifa:team/pred/Team">
+                        <div class="flex flex-col items-center w-20 cursor">
+                            <div>
+                                {% if team.team_image %}
+                                <img src="{{ team.team_image }}" alt="{{ team.team }}" class="h-20 w-full object-contain" property="fifa:team/pred/imageUrl">
+                                {% else %}
+                                <img src="https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg"
+                                    alt="{{ team.team }}" class="h-20 w-full object-contain" property="fifa:team/pred/imageUrl">
+                                {% endif %}
+                            </div>
+                            <div>
+                                <p class="text-center mt-2" property="fifa:team/pred/name">
+                                    {{ team.team }}
+                                </p>
+                            </div>
                         </div>
-                        <div>
-                            <p class="text-center mt-2" property="fifatp:name">
-                                {{ team.team }}
-                            </p>
-                        </div>
-                    </div>
-                </a>
+                    </a>
                 {% endfor %}
             </div>
-            
         </div>
     </div>
 </div>
