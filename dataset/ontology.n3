@@ -1,0 +1,337 @@
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+@prefix fifarel: <http://fifa24/relationship/> .
+@prefix fifaplg: <http://fifa24/player/guid/> .
+@prefix fifaplp: <http://fifa24/player/pred/> .
+@prefix fifapog: <http://fifa24/position/guid/> .
+@prefix fifapop: <http://fifa24/position/pred/> .
+@prefix fifagg: <http://fifa24/gender/guid/> .
+@prefix fifagp: <http://fifa24/gender/pred/> .
+@prefix fifang: <http://fifa24/nationality/guid/> .
+@prefix fifanp: <http://fifa24/nationality/pred/> .
+@prefix fifatg: <http://fifa24/team/guid/> .
+@prefix fifatp: <http://fifa24/team/pred/> .
+@prefix fifalg: <http://fifa24/league/guid/> .
+@prefix fifalp: <http://fifa24/league/pred/> .
+@prefix fifasqg: <http://fifa24/squad/guid/> .
+@prefix fifasqp: <http://fifa24/squad/pred/> .
+@prefix fifaspg: <http://fifa24/squad_player/guid/> .
+@prefix fifaspp: <http://fifa24/squad_player/pred/> .
+
+###################### Classes ######################
+
+fifaplg:Player a rdfs:Class ;
+    rdfs:label "Player"@en .
+
+fifatg:Team a rdfs:Class ;
+    rdfs:label "Team"@en .
+
+fifalg:League a rdfs:Class ;
+    rdfs:label "League"@en .
+
+fifang:Nationality a rdfs:Class ;
+    rdfs:label "Nationality"@en .
+
+fifapog:Position a rdfs:Class ;
+    rdfs:label "Position"@en .
+
+fifagg:Gender a rdfs:Class ;
+    rdfs:label "Gender"@en .
+
+fifagg:Male a owl:Class ;
+    rdfs:label "Men's Football"@en ;
+    fifagp:shortLabel "Man"@en ;
+    owl:equivalentClass [ a owl:Restriction ;
+        owl:onProperty fifaplp:gender ;
+        owl:hasValue fifagg:0 ;
+    ] .
+
+fifagg:Female a owl:Class ;
+    rdfs:label "Women's Football"@en ;
+    fifagp:shortLabel "Woman"@en ;
+    owl:equivalentClass [ a owl:Restriction ;
+        owl:onProperty fifaplp:gender ;
+        owl:hasValue fifagg:1
+    ] .
+
+fifaspg:SquadPlayer a rdfs:Class ;
+    owl:equivalentClass [ a owl:Restriction ;
+        owl:onProperty fifaspp:player ;
+        owl:someValuesFrom fifaplg:Player ;
+        owl:onClass fifaspg:SquadPlayer
+    ] .
+
+fifasqg:Squad a rdfs:Class ;
+    rdfs:label "Squad"@en ;
+    owl:equivalentClass [ a owl:Restriction ;
+        owl:onProperty fifasqp:player ;
+        owl:someValuesFrom fifaspg:SquadPlayer ;
+        owl:onClass fifasqg:Squad
+    ] .
+
+###################### SubClasses ######################
+
+fifaplg:Player rdfs:subClassOf foaf:Person .
+
+fifaspg:SquadPlayer rdfs:subClassOf fifaplg:Player .
+
+fifasqg:Squad rdfs:subClassOf foaf:Group .
+
+fifatg:Team rdfs:subClassOf foaf:Group .
+
+fifalg:Team rdfs:subClassOf foaf:Organization .
+
+fifalg:League rdfs:subClassOf foaf:Organization .
+
+fifagg:Male rdfs:subClassOf fifagg:Gender .
+
+fifagg:Female rdfs:subClassOf fifagg:Gender .
+
+###################### DisjointClasses ######################
+
+fifagg:Female owl:disjointWith fifagg:Male .
+
+###################### ObjectProperties ######################
+
+fifaplp:team a owl:ObjectProperty ;
+    rdfs:label "team"@en ;
+    rdfs:domain fifaplg:Player ;
+    rdfs:range fifatg:Team .
+
+fifatp:league a owl:ObjectProperty ;
+    rdfs:label "league"@en ;
+    rdfs:domain fifatg:Team ;
+    rdfs:range fifalg:League .
+
+fifaplp:league a owl:ObjectProperty ;
+    rdfs:label "league"@en ;
+    rdfs:domain fifaplg:Player ;
+    rdfs:range fifalg:League .
+
+fifaplp:nationality a owl:ObjectProperty ;
+    rdfs:label "nationality"@en ;
+    rdfs:domain fifaplg:Player ;
+    rdfs:range fifang:Nationality .
+
+fifaspp:player a owl:ObjectProperty ;
+    rdfs:label "player"@en ;
+    rdfs:domain fifaspg:SquadPlayer ;
+    rdfs:range fifaplg:Player .
+
+fifasqp:player a owl:ObjectProperty ;
+    rdfs:label "player"@en ;
+    rdfs:domain fifasqg:Squad ;
+    rdfs:range fifaspg:SquadPlayer .
+
+fifaplp:gender a owl:ObjectProperty ;
+    rdfs:label "gender"@en ;
+    rdfs:domain fifaplg:Player ;
+    rdfs:range fifagg:Gender .
+
+fifaplp:position a owl:DataProperty ;
+    rdfs:label "position"@en ;
+    rdfs:domain fifaplg:Player ;
+    rdfs:range fifapog:Position .
+
+fifaplp:altPos a owl:ObjectProperty ;
+    rdfs:label "altPos"@en ;
+    rdfs:domain fifaplg:Player ;
+    rdfs:range fifapog:Position .
+
+###################### DataProperties ######################
+
+fifagp:shortLabel a owl:DataProperty ;
+    rdfs:label "shortLabel"@en ;
+    rdfs:domain fifagg:Gender ;
+    rdfs:range rdf:langString .
+
+fifaplp:preferredFoot a owl:DataProperty ;
+    rdfs:label "preferredFoot"@en ;
+    rdfs:domain fifaplg:Player ;
+    rdfs:range [
+        a rdfs:Datatype ;
+        rdfs:label "int"@en ;
+        owl:onDatatype xsd:int ;
+        owl:oneOf ( "1"^^xsd:int "2"^^xsd:int )
+    ] .
+
+fifaplp:skillMoves a owl:DataProperty ;
+    rdfs:label "skillMoves"@en ;
+    rdfs:domain fifaplg:Player ;
+    rdfs:range [
+        a rdfs:Datatype ;
+        rdfs:label "int"@en ;
+        owl:onDatatype xsd:int ;
+        owl:withRestrictions (
+            [ xsd:minInclusive "1"^^xsd:int ]
+            [ xsd:maxInclusive "5"^^xsd:int ]
+        )
+    ] .
+
+fifaplp:weakFootAbility a owl:DataProperty ;
+    rdfs:label "weakFootAbility"@en ;
+    rdfs:domain fifaplg:Player ;
+    rdfs:range [
+        a rdfs:Datatype ;
+        rdfs:label "int"@en ;
+        owl:onDatatype xsd:int ;
+        owl:withRestrictions (
+            [ xsd:minInclusive "1"^^xsd:int ]
+            [ xsd:maxInclusive "5"^^xsd:int ]
+        )
+    ] .
+
+fifaplp:attackingWorkRate a owl:DataProperty ;
+    rdfs:label "attackingWorkRate"@en ;
+    rdfs:domain fifaplg:Player ;
+    rdfs:range [
+        a rdfs:Datatype ;
+        rdfs:label "int"@en ;
+        owl:onDatatype xsd:int ;
+        owl:oneOf ( "0"^^xsd:int "1"^^xsd:int "2"^^xsd:int )
+    ] .
+
+fifaplp:defensiveWorkRate a owl:DataProperty ;
+    rdfs:label "defensiveWorkRate"@en ;
+    rdfs:domain fifaplg:Player ;
+    rdfs:range [
+        a rdfs:Datatype ;
+        rdfs:label "int"@en ;
+        owl:onDatatype xsd:int ;
+        owl:oneOf ( "0"^^xsd:int "1"^^xsd:int "2"^^xsd:int )
+    ] .
+
+fifaplp:avatarUrl a owl:DataProperty ;
+    rdfs:label "avatarUrl"@en ;
+    rdfs:domain fifaplg:Player ;
+    rdfs:range xsd:string .
+
+fifaplp:shieldUrl a owl:DataProperty ;
+    rdfs:label "shieldUrl"@en ;
+    rdfs:domain fifaplg:Player ;
+    rdfs:range xsd:string .
+
+fifaplp:overallRating a owl:DataProperty ;
+    rdfs:label "overallRating"@en ;
+    rdfs:domain fifaplg:Player ;
+    rdfs:range [
+        a rdfs:Datatype ;
+        rdfs:label "int"@en ;
+        owl:onDatatype xsd:int ;
+        owl:withRestrictions (
+            [ xsd:minInclusive "1"^^xsd:int ]
+            [ xsd:maxInclusive "99"^^xsd:int ]
+        )
+    ] .
+
+fifaplp:firstName a owl:DataProperty ;
+    rdfs:label "firstName"@en ;
+    rdfs:domain fifaplg:Player ;
+    rdfs:range xsd:string .
+
+fifaplp:lastName a owl:DataProperty ;
+    rdfs:label "lastName"@en ;
+    rdfs:domain fifaplg:Player ;
+    rdfs:range xsd:string .
+
+fifaplp:commonName a owl:DataProperty ;
+    rdfs:label "commonName"@en ;
+    rdfs:domain fifaplg:Player ;
+    rdfs:range xsd:string .
+
+fifaplp:birthdate a owl:DataProperty ;
+    rdfs:label "birthdate"@en ;
+    rdfs:domain fifaplg:Player ;
+    rdfs:range xsd:date .
+
+fifaplp:height a owl:DataProperty ;
+    rdfs:label "height"@en ;
+    rdfs:domain fifaplg:Player ;
+    rdfs:range xsd:positiveInteger .
+
+fifaplp:weight a owl:DataProperty ;
+    rdfs:label "weight"@en ;
+    rdfs:domain fifaplg:Player ;
+    rdfs:range xsd:positiveInteger .
+
+fifaplp:stat a owl:DataProperty ;
+    rdfs:label "stat"@en ;
+    rdfs:domain fifaplg:Player ;
+    rdfs:range xsd:string .
+
+fifatp:label a owl:DataProperty ;
+    rdfs:label "label"@en ;
+    rdfs:domain fifatg:Team ;
+    rdfs:range xsd:string .
+
+fifatp:imageUrl a owl:DataProperty ;
+    rdfs:label "imageUrl"@en ;
+    rdfs:domain fifatg:Team ;
+    rdfs:range xsd:string .
+
+fifalp:label a owl:DataProperty ;
+    rdfs:label "label"@en ;
+    rdfs:domain fifalg:League ;
+    rdfs:range xsd:string .
+
+fifalp:imageUrl a owl:DataProperty ;
+    rdfs:label "imageUrl"@en ;
+    rdfs:domain fifalg:League ;
+    rdfs:range xsd:string .
+
+fifagp:label a owl:DataProperty;
+    rdfs:label "label"@en ;
+    rdfs:domain fifagg:Gender ;
+    rdfs:range xsd:string .
+
+fifanp:label a owl:DataProperty ;
+    rdfs:label "label"@en ;
+    rdfs:domain fifang:Nationality ;
+    rdfs:range xsd:string .
+
+fifanp:imageUrl a owl:DataProperty ;
+    rdfs:label "imageUrl"@en ;
+    rdfs:domain fifang:Nationality ;
+    rdfs:range xsd:string .
+
+fifasqp:formation a owl:DataProperty ;
+    rdfs:label "formation"@en ;
+    rdfs:domain fifasqg:Squad ;
+    rdfs:range xsd:string .
+
+fifasqp:name a owl:DataProperty ;
+    rdfs:label "name"@en ;
+    rdfs:domain fifasqg:Squad ;
+    rdfs:range xsd:string .
+
+fifasqp:userId a owl:DataProperty ;
+    rdfs:label "userId"@en ;
+    rdfs:domain fifasqg:Squad ;
+    rdfs:range xsd:string .
+
+fifapop:label a owl:DataProperty ;
+    rdfs:label "label"@en ;
+    rdfs:domain fifapog:Position ;
+    rdfs:range xsd:string .
+
+fifapop:shortLabel a owl:DataProperty ;
+    rdfs:label "shortLabel"@en ;
+    rdfs:domain fifapog:Position ;
+    rdfs:range xsd:string .
+
+fifaspp:position a owl:DataProperty ;
+    rdfs:label "position"@en ;
+    rdfs:domain fifaspg:SquadPlayer ;
+    rdfs:range [
+        a rdfs:Datatype ;
+        rdfs:label "int"@en ;
+        owl:onDatatype xsd:int ;
+        owl:withRestrictions (
+            [ xsd:minInclusive "1"^^xsd:int ]
+            [ xsd:maxInclusive "11"^^xsd:int ]
+        )
+    ] .
