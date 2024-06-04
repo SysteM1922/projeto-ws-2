@@ -6,10 +6,10 @@
 
 {% include "navbar.html" %}
 <div class="py-10">
-    <div class="flex max-w-screen-xl mx-auto h-full py-10 text-white bg-gray-800 bg-opacity-60 rounded-lg">
+    <div class="flex max-w-screen-xl mx-auto h-full py-10 text-white bg-gray-800 bg-opacity-60 rounded-lg" xmlns:fifaplp="http://fifa24/player/pred/" xmlns:fifagg="http://fifa24/gender/guid/" xmlns:fifang="http://fifa24/nationality/guid/" xmlns:fifatg="http://fifa24/team/guid/" xmlns:fifatp="http://fifa24/team/pred/" typeof="fifaplp:Player">
         <div class="border-r-2 border-gray-900 px-5">
             <div class="flex flex-col pb-5">
-                <img src="{{ player.card }}" alt="{{ player.name }}" class="w-72 object-contain">
+                <img src="{{ player.card }}" alt="{{ player.name }}" class="w-72 object-contain" property="fifaplp:shieldUrl">
             </div>
             <div class="flex">
                 <div class="flex flex-col mr-5">
@@ -51,23 +51,23 @@
                     </span>
                 </div>
                 <div class="flex flex-col">
-                    <span class="font-bold items-center h-8">
+                    <span class="font-bold items-center h-8" property="fifaplp:name">
                         {{ player.name }}
                     </span>
-                    <span class="flex items-center h-8">
-                        <img src="{{ player.team }}" alt="{{ player.teamName }}" class="h-8 object-contain mr-2">
-                        <a href="/team/{{ player.teamid }}" class="underline hover:text-blue-500">
-                            {{ player.teamName }}
+                    <span class="flex items-center h-8" property="fifaplp:team">
+                        <img src="{{ player.team }}" alt="{{ player.teamName }}" class="h-8 object-contain mr-2" property="fifatp:imageUrl">
+                        <a href="/team/{{ player.teamid }}" class="underline hover:text-blue-500" >
+                            <span>{{ player.teamName }}</span>
                         </a>
                     </span>
                     <span class="flex items-center h-8">
-                        <img src="{{ player.flag }}" alt="{{ player.nationality }}" class="h-8 object-contain mr-2">
+                        <img src="{{ player.flag }}" alt="{{ player.nationality }}" class="h-8 object-contain mr-2" property="fifaplp:nation" resource="fifang:{{player.nationality}}">
                         {{ player.nationality }}
                     </span>
-                    <span class="flex items-center h-8">
+                    <span class="flex items-center h-8" property="fifaplp:gender" resource="fifagg:{{player.gender}}">
                         {{ player.gender }}
                     </span>
-                    <span class="flex items-center h-8">
+                    <span class="flex items-center h-8" property="fifaplp:skillMoves">
                         {{ player.skills }}
                         <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
                             height="24" fill="currentColor" viewBox="0 0 24 24">
@@ -75,7 +75,7 @@
                                 d="M13.849 4.22c-.684-1.626-3.014-1.626-3.698 0L8.397 8.387l-4.552.361c-1.775.14-2.495 2.331-1.142 3.477l3.468 2.937-1.06 4.392c-.413 1.713 1.472 3.067 2.992 2.149L12 19.35l3.897 2.354c1.52.918 3.405-.436 2.992-2.15l-1.06-4.39 3.468-2.938c1.353-1.146.633-3.336-1.142-3.477l-4.552-.36-1.754-4.17Z" />
                         </svg>
                     </span>
-                    <span class="flex items-center h-8">
+                    <span class="flex items-center h-8" property="fifaplp:weakFootAbility">
                         {{ player.weakfoot }}
                         <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
                             height="24" fill="currentColor" viewBox="0 0 24 24">
@@ -83,29 +83,29 @@
                                 d="M13.849 4.22c-.684-1.626-3.014-1.626-3.698 0L8.397 8.387l-4.552.361c-1.775.14-2.495 2.331-1.142 3.477l3.468 2.937-1.06 4.392c-.413 1.713 1.472 3.067 2.992 2.149L12 19.35l3.897 2.354c1.52.918 3.405-.436 2.992-2.15l-1.06-4.39 3.468-2.938c1.353-1.146.633-3.336-1.142-3.477l-4.552-.36-1.754-4.17Z" />
                         </svg>
                     </span>
-                    <span class="flex items-center h-8">
+                    <span class="flex items-center h-8" property="fifaplp:preferredFoot">
                         {{ player.foot|compute_foot }}
                     </span>
-                    <span class="flex items-center h-8">
+                    <span class="flex items-center h-8" property="fifaplp:height">
                         {{ player.height }} cm
                     </span>
-                    <span class="flex items-center h-8">
+                    <span class="flex items-center h-8" property="fifaplp:weight">
                         {{ player.weight }} kg
                     </span>
-                    <span class="flex items-center h-8">
+                    <span class="flex items-center h-8" property="fifaplp:attackingWorkRate">
                         {{ player.attwr|compute_full_wr }}
                     </span>
-                    <span class="flex items-center h-8">
+                    <span class="flex items-center h-8" property="fifaplp:defensiveWorkRate">
                         {{ player.defwr|compute_full_wr }}
                     </span>
-                    <span class="flex items-center h-8">
+                    <span class="flex items-center h-8" property="fifaplp:age">
                         {{ player.birth|compute_age }} years old
                     </span>
                 </div>
             </div>
         </div>
-        <div class="flex flex-col w-full h-max">
-            <div class="flex mb-10">
+        <div class="flex flex-col w-full h-max" rel="fifaplp:Stats" >
+            <div class="flex mb-10" >
                 <div class="mx-5 w-full justify-center">
                     <div class="flex pb-2 justify-center">
                         <span class="text-2xl font-bold">
@@ -115,9 +115,15 @@
                             Pace
                             {% endif %}
                         </span>
-                        <span class="flex flex-col w-full items-end text-2xl font-bold">
+                        {% if player.position == 'GK' %}
+                        <span class="flex flex-col w-full items-end text-2xl font-bold" property="fifaplp:Diving">
                             {{ player.stats.pac }}
                         </span>
+                        {% else %}
+                        <span class="flex flex-col w-full items-end text-2xl font-bold" property="fifaplp:Pace">
+                            {{ player.stats.pac }}
+                        </span>
+                        {% endif %}
                     </div>
                     <div class="w-full bg-gray-900 rounded-full h-2.5 dark:bg-gray-700">
                         <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{ player.stats.pac }}%"></div>
@@ -127,7 +133,7 @@
                         <span class="w-full text-lg">
                             Diving
                         </span>
-                        <span class="flex flex-col items-end text-lg">
+                        <span class="flex flex-col items-end text-lg" property="fifaplp:diving">
                             {{ player.stats.gkDiving }}
                         </span>
                     </div>
@@ -136,7 +142,7 @@
                         <span class="w-full text-lg">
                             Acceleration
                         </span>
-                        <span class="flex flex-col items-end text-lg">
+                        <span class="flex flex-col items-end text-lg" property="fifaplp:acceleration">
                             {{ player.stats.acceleration }}
                         </span>
                     </div>
@@ -144,7 +150,7 @@
                         <span class="w-full text-lg">
                             Sprint Speed
                         </span>
-                        <span class="flex flex-col items-end text-lg">
+                        <span class="flex flex-col items-end text-lg" property="fifaplp:sprintSpeed">
                             {{ player.stats.sprintSpeed }}
                         </span>
                     </div>
@@ -159,9 +165,16 @@
                             Shooting
                             {% endif %}
                         </span>
-                        <span class="flex flex-col w-full items-end text-2xl font-bold">
+                        {% if player.position == 'GK' %}
+                        <span class="flex flex-col w-full items-end text-2xl font-bold" property="fifaplp:Handling">
                             {{ player.stats.sho }}
                         </span>
+                        {% else %}
+                        <span class="flex flex-col w-full items-end text-2xl font-bold" property="fifaplp:Shooting">
+                            {{ player.stats.sho }}
+                        </span>
+                        {% endif %}
+                        
                     </div>
                     <div class="w-full bg-gray-900 rounded-full h-2.5 dark:bg-gray-700">
                         <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{ player.stats.sho }}%"></div>
@@ -171,7 +184,7 @@
                         <span class="w-full text-lg">
                             Handling
                         </span>
-                        <span class="flex flex-col items-end text-lg">
+                        <span class="flex flex-col items-end text-lg" property="fifaplp:handling">
                             {{ player.stats.gkHandling }}
                         </span>
                     </div>
@@ -180,7 +193,7 @@
                         <span class="w-full text-lg">
                             Positioning
                         </span>
-                        <span class="flex flex-col items-end text-lg">
+                        <span class="flex flex-col items-end text-lg" property="fifaplp:positioning">
                             {{ player.stats.positioning }}
                         </span>
                     </div>
@@ -188,7 +201,7 @@
                         <span class="w-full text-lg">
                             Finishing
                         </span>
-                        <span class="flex flex-col items-end text-lg">
+                        <span class="flex flex-col items-end text-lg" property="fifaplp:finishing">
                             {{ player.stats.finishing }}
                         </span>
                     </div>
@@ -196,7 +209,7 @@
                         <span class="w-full text-lg">
                             Shot Power
                         </span>
-                        <span class="flex flex-col items-end text-lg">
+                        <span class="flex flex-col items-end text-lg" property="fifaplp:shotPower">
                             {{ player.stats.shotPower }}
                         </span>
                     </div>
@@ -204,7 +217,7 @@
                         <span class="w-full text-lg">
                             Long Shots
                         </span>
-                        <span class="flex flex-col items-end text-lg">
+                        <span class="flex flex-col items-end text-lg" property="fifaplp:longShots">
                             {{ player.stats.longShots }}
                         </span>
                     </div>
@@ -212,7 +225,7 @@
                         <span class="w-full text-lg">
                             Volleys
                         </span>
-                        <span class="flex flex-col items-end text-lg">
+                        <span class="flex flex-col items-end text-lg" property="fifaplp:volleys">
                             {{ player.stats.volleys }}
                         </span>
                     </div>
@@ -220,7 +233,7 @@
                         <span class="w-full text-lg">
                             Penalties
                         </span>
-                        <span class="flex flex-col items-end text-lg">
+                        <span class="flex flex-col items-end text-lg" property="fifaplp:penalties">
                             {{ player.stats.penalties }}
                         </span>
                     </div>
@@ -235,9 +248,15 @@
                             Passing
                             {% endif %}
                         </span>
-                        <span class="flex flex-col w-full items-end text-2xl font-bold">
+                        {% if player.position == 'GK' %}
+                        <span class="flex flex-col w-full items-end text-2xl font-bold" property="fifaplp:Kicking">
                             {{ player.stats.pas }}
                         </span>
+                        {% else %}
+                        <span class="flex flex-col w-full items-end text-2xl font-bold" property="fifaplp:Passing">
+                            {{ player.stats.pas }}
+                        </span>
+                        {% endif %}
                     </div>
                     <div class="w-full bg-gray-900 rounded-full h-2.5 dark:bg-gray-700">
                         <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{ player.stats.pas }}%"></div>
@@ -247,7 +266,7 @@
                         <span class="w-full text-lg">
                             Kicking
                         </span>
-                        <span class="flex flex-col items-end text-lg">
+                        <span class="flex flex-col items-end text-lg" property="fifaplp:kicking">
                             {{ player.stats.gkKicking }}
                         </span>
                     </div>
@@ -256,7 +275,7 @@
                         <span class="w-full text-lg">
                             Vision
                         </span>
-                        <span class="flex flex-col items-end text-lg">
+                        <span class="flex flex-col items-end text-lg" property="fifaplp:vision">
                             {{ player.stats.vision }}
                         </span>
                     </div>
@@ -264,7 +283,7 @@
                         <span class="w-full text-lg">
                             Crossing
                         </span>
-                        <span class="flex flex-col items-end text-lg">
+                        <span class="flex flex-col items-end text-lg" property="fifaplp:crossing">
                             {{ player.stats.crossing }}
                         </span>
                     </div>
@@ -272,7 +291,7 @@
                         <span class="w-full text-lg">
                             FK. Accuracy
                         </span>
-                        <span class="flex flex-col items-end text-lg">
+                        <span class="flex flex-col items-end text-lg" property="fifaplp:fkAccuracy">
                             {{ player.stats.freeKickAccuracy }}
                         </span>
                     </div>
@@ -280,7 +299,7 @@
                         <span class="w-full text-lg">
                             Short Passing
                         </span>
-                        <span class="flex flex-col items-end text-lg">
+                        <span class="flex flex-col items-end text-lg" property="fifaplp:shortPassing">
                             {{ player.stats.shortPassing }}
                         </span>
                     </div>
@@ -288,7 +307,7 @@
                         <span class="w-full text-lg">
                             Long Passing
                         </span>
-                        <span class="flex flex-col items-end text-lg">
+                        <span class="flex flex-col items-end text-lg" property="fifaplp:longPassing">
                             {{ player.stats.longPassing }}
                         </span>
                     </div>
@@ -296,15 +315,15 @@
                         <span class="w-full text-lg">
                             Curve
                         </span>
-                        <span class="flex flex-col items-end text-lg">
+                        <span class="flex flex-col items-end text-lg" property="fifaplp:curve">
                             {{ player.stats.curve }}
                         </span>
                     </div>
                     {% endif %}
                 </div>
             </div>
-            <div class="flex">
-                <div class="mx-5 w-full justify-center">
+            <div class="flex" >
+                <div class="mx-5 w-full justify-center" >
                     <div class="flex pb-2 justify-center">
                         <span class="text-2xl font-bold">
                             {% if player.position == 'GK' %}
@@ -313,9 +332,15 @@
                             Dribbling
                             {% endif %}
                         </span>
-                        <span class="flex flex-col w-full items-end text-2xl font-bold">
+                        {% if player.position == 'GK' %}
+                        <span class="flex flex-col w-full items-end text-2xl font-bold" property="fifaplp:Reflexes">
                             {{ player.stats.dri }}
                         </span>
+                        {% else %}
+                        <span class="flex flex-col w-full items-end text-2xl font-bold" property="fifaplp:Dribbling">
+                            {{ player.stats.dri }}
+                        </span>
+                        {% endif %}
                     </div>
                     <div class="w-full bg-gray-900 rounded-full h-2.5 dark:bg-gray-700">
                         <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{ player.stats.dri }}%"></div>
@@ -325,7 +350,7 @@
                         <span class="w-full text-lg">
                             Reflexes
                         </span>
-                        <span class="flex flex-col items-end text-lg">
+                        <span class="flex flex-col items-end text-lg" property="fifaplp:reflexes">
                             {{ player.stats.gkReflexes }}
                         </span>
                     </div>
@@ -334,7 +359,7 @@
                         <span class="w-full text-lg">
                             Agility
                         </span>
-                        <span class="flex flex-col items-end text-lg">
+                        <span class="flex flex-col items-end text-lg" property="fifaplp:agility">
                             {{ player.stats.agility }}
                         </span>
                     </div>
@@ -342,7 +367,7 @@
                         <span class="w-full text-lg">
                             Balance
                         </span>
-                        <span class="flex flex-col items-end text-lg">
+                        <span class="flex flex-col items-end text-lg" property="fifaplp:balance">
                             {{ player.stats.balance }}
                         </span>
                     </div>
@@ -350,7 +375,7 @@
                         <span class="w-full text-lg">
                             Reactions
                         </span>
-                        <span class="flex flex-col items-end text-lg">
+                        <span class="flex flex-col items-end text-lg" property="fifaplp:reactions">
                             {{ player.stats.reactions }}
                         </span>
                     </div>
@@ -358,7 +383,7 @@
                         <span class="w-full text-lg">
                             Ball Control
                         </span>
-                        <span class="flex flex-col items-end text-lg">
+                        <span class="flex flex-col items-end text-lg" property="fifaplp:ballControl">
                             {{ player.stats.ballControl }}
                         </span>
                     </div>
@@ -366,7 +391,7 @@
                         <span class="w-full text-lg">
                             Dribbling
                         </span>
-                        <span class="flex flex-col items-end text-lg">
+                        <span class="flex flex-col items-end text-lg" property="fifaplp:dribbling">
                             {{ player.stats.dribbling }}
                         </span>
                     </div>
@@ -374,7 +399,7 @@
                         <span class="w-full text-lg">
                             Composure
                         </span>
-                        <span class="flex flex-col items-end text-lg">
+                        <span class="flex flex-col items-end text-lg" property="fifaplp:composure">
                             {{ player.stats.composure }}
                         </span>
                     </div>
@@ -389,9 +414,15 @@
                             Defending
                             {% endif %}
                         </span>
-                        <span class="flex flex-col w-full items-end text-2xl font-bold">
+                        {% if player.position == 'GK' %}
+                        <span class="flex flex-col w-full items-end text-2xl font-bold" property="fifaplp:Speed">
                             {{ player.stats.def }}
                         </span>
+                        {% else %}
+                        <span class="flex flex-col w-full items-end text-2xl font-bold" property="fifaplp:Defending">
+                            {{ player.stats.def }}
+                        </span>
+                        {% endif %}
                     </div>
                     <div class="w-full bg-gray-900 rounded-full h-2.5 dark:bg-gray-700">
                         <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{ player.stats.def }}%"></div>
@@ -401,7 +432,7 @@
                         <span class="w-full text-lg">
                             Acceleration
                         </span>
-                        <span class="flex flex-col items-end text-lg">
+                        <span class="flex flex-col items-end text-lg" property="fifaplp:acceleration">
                             {{ player.stats.acceleration }}
                         </span>
                     </div>
@@ -409,7 +440,7 @@
                         <span class="w-full text-lg">
                             Sprint Speed
                         </span>
-                        <span class="flex flex-col items-end text-lg">
+                        <span class="flex flex-col items-end text-lg" property="fifaplp:sprintSpeed">
                             {{ player.stats.sprintSpeed }}
                         </span>
                     </div>
@@ -418,7 +449,7 @@
                         <span class="w-full text-lg">
                             Interceptions
                         </span>
-                        <span class="flex flex-col items-end text-lg">
+                        <span class="flex flex-col items-end text-lg" property="fifaplp:interceptions">
                             {{ player.stats.interceptions}}
                         </span>
                     </div>
@@ -426,7 +457,7 @@
                         <span class="w-full text-lg">
                             Heading Accuracy
                         </span>
-                        <span class="flex flex-col items-end text-lg">
+                        <span class="flex flex-col items-end text-lg" property="fifaplp:headingAccuracy">
                             {{ player.stats.headingAccuracy }}
                         </span>
                     </div>
@@ -434,7 +465,7 @@
                         <span class="w-full text-lg">
                             Def. Awareness
                         </span>
-                        <span class="flex flex-col items-end text-lg">
+                        <span class="flex flex-col items-end text-lg" property="fifaplp:defensiveAwareness">
                             {{ player.stats.defensiveAwareness }}
                         </span>
                     </div>
@@ -442,7 +473,7 @@
                         <span class="w-full text-lg">
                             Standing Tackle
                         </span>
-                        <span class="flex flex-col items-end text-lg">
+                        <span class="flex flex-col items-end text-lg" property="fifaplp:standingTackle">
                             {{ player.stats.standingTackle }}
                         </span>
                     </div>
@@ -450,7 +481,7 @@
                         <span class="w-full text-lg">
                             Sliding Tackle
                         </span>
-                        <span class="flex flex-col items-end text-lg">
+                        <span class="flex flex-col items-end text-lg" property="fifaplp:slidingTackle">
                             {{ player.stats.slidingTackle }}
                         </span>
                     </div>
@@ -465,9 +496,15 @@
                             Physicality
                             {% endif %}
                         </span>
-                        <span class="flex flex-col w-full items-end text-2xl font-bold">
+                        {% if player.position == 'GK' %}
+                        <span class="flex flex-col w-full items-end text-2xl font-bold" property="fifaplp:Positioning">
                             {{ player.stats.phy }}
                         </span>
+                        {% else %}
+                        <span class="flex flex-col w-full items-end text-2xl font-bold" property="fifaplp:Physicality">
+                            {{ player.stats.phy }}
+                        </span>
+                        {% endif %}
                     </div>
                     <div class="w-full bg-gray-900 rounded-full h-2.5 dark:bg-gray-700">
                         <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{ player.stats.phy }}%"></div>
@@ -477,7 +514,7 @@
                         <span class="w-full text-lg">
                             Positioning
                         </span>
-                        <span class="flex flex-col items-end text-lg">
+                        <span class="flex flex-col items-end text-lg" property="fifaplp:positioning">
                             {{ player.stats.gkPositioning }}
                         </span>
                     </div>
@@ -486,7 +523,7 @@
                         <span class="w-full text-lg">
                             Jumping
                         </span>
-                        <span class="flex flex-col items-end text-lg">
+                        <span class="flex flex-col items-end text-lg" property="fifaplp:jumping">
                             {{ player.stats.jumping }}
                         </span>
                     </div>
@@ -494,7 +531,7 @@
                         <span class="w-full text-lg">
                             Stamina
                         </span>
-                        <span class="flex flex-col items-end text-lg">
+                        <span class="flex flex-col items-end text-lg" property="fifaplp:stamina">
                             {{ player.stats.stamina }}
                         </span>
                     </div>
@@ -502,7 +539,7 @@
                         <span class="w-full text-lg">
                             Strength
                         </span>
-                        <span class="flex flex-col items-end text-lg">
+                        <span class="flex flex-col items-end text-lg" property="fifaplp:strength">
                             {{ player.stats.strength }}
                         </span>
                     </div>
@@ -510,7 +547,7 @@
                         <span class="w-full text-lg">
                             Aggression
                         </span>
-                        <span class="flex flex-col items-end text-lg">
+                        <span class="flex flex-col items-end text-lg" property="fifaplp:aggression">
                             {{ player.stats.aggression }}
                         </span>
                     </div>
@@ -518,14 +555,15 @@
                         <span class="w-full text-lg">
                             Sliding Tackle
                         </span>
-                        <span class="flex flex-col items-end text-lg">
+                        <span class="flex flex-col items-end text-lg" property="fifaplp:slidingTackle">
                             {{ player.stats.slidingTackle }}
                         </span>
                     </div>
                     {% endif %}
                 </div>
             </div>
-            <div class="flex felx-col text-white w-full h-full p-10 justify-evenly">
+            
+            <div class="flex felx-col text-white w-full h-full p-10 justify-evenly" rel="fifaplp:Extra" typeof="fifaplp:Extra">
                 {% for team in extra %}
                 <a href="{{ team.team_url }}">
                     <div class="flex flex-col items-center w-20 cursor">
@@ -546,6 +584,7 @@
                 </a>
                 {% endfor %}
             </div>
+            
         </div>
     </div>
 </div>
