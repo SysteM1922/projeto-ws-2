@@ -1,5 +1,27 @@
 from .utils import select, update, ask
 
+def get_squad_pontuation(guid: str) -> dict:
+    query = f"""
+    PREFIX fifarel: <http://fifa24/relationship/>
+    PREFIX fifaspp: <http://fifa24/squad_player/pred/>
+    PREFIX fifasqp: <http://fifa24/squad/pred/>
+    PREFIX fifasqg: <http://fifa24/squad/guid/>
+
+    SELECT (COUNT(?player1) AS ?points)
+    WHERE {{
+    	fifasqg:{guid} fifasqp:player ?squadPlayer1 .
+    	fifasqg:{guid} fifasqp:player ?squadPlayer2 .
+    	FILTER(?squadPlayer1 != ?squadPlayer2)
+    	?squadPlayer1 fifaspp:player ?player1 .
+    	?squadPlayer2 fifaspp:player ?player2 .
+    	?player1 fifarel:teammate ?player2 .
+    }}
+    """
+
+    result = select(query)
+
+    return int(result[0]["points"]) if result else 0
+
 def get_squads_by_user_id(user_id: str) -> list[dict]:
     query = f"""
     PREFIX fifasqp: <http://fifa24/squad/pred/>
@@ -17,6 +39,7 @@ def get_squads_by_user_id(user_id: str) -> list[dict]:
 
     for squad in result:
         squad["squadId"] = squad["squadId"].split("/")[-1]
+        squad["pointuation"] = get_squad_pontuation(squad["squadId"])
 
     return result
 

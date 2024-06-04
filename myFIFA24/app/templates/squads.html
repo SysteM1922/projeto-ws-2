@@ -14,8 +14,9 @@
       <thead>
         <tr class="flex">
           <th class="flex px-4 py-2 text-center w-1/4">Squad Name</th>
-          <th class="px-4 py-2 mr-auto">Formation</th>
-          <th class="px-4 py-2"></th>
+          <th class="flex px-4 py-2 w-1/4">Formation</th>
+          <th class="flex px-4 py-2 w-1/4">Pontuation</th>
+          <th class="px-4 py-2 w-1/4"></th>
         </tr>
       </thead>
       <tbody>
@@ -26,8 +27,9 @@
           <td class="flex px-4 py-2 text-center w-1/4">
             <a href="/squad/{{ squad.squadId }}"> {{ squad.name }} </a>
           </td>
-          <td class="px-4 py-2 mr-auto">{{ squad.formation }}</td>
-          <td class="p-2 ml-auto">
+          <td class="flex px-4 py-2 mr-auto w-1/4">{{ squad.formation }}</td>
+          <td class="flex px-4 py-2 mr-auto w-1/4">{{ squad.pointuation }}</td>
+          <td class="flex p-2 w-1/4 justify-end">
             <a class="flex" href="/delete_squad/{{ squad.squadId }}">
               <svg
                 class="w-6 h-6 text-red-600 border-red-600 border-2 rounded-lg shadow-md"

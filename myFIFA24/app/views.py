@@ -246,6 +246,7 @@ def delete_squad(request, guid):
 @login_required(login_url='login')  
 def squads_by_user(request):
     squads = squads_api.get_squads_by_user_id(request.user.id)
+    print(squads)
     return render(request, 'squads.html', {'squads': squads})
 
 
