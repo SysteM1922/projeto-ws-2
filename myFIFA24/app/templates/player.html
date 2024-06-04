@@ -6,7 +6,7 @@
 
 {% include "navbar.html" %}
 <div class="py-10">
-    <div class="flex max-w-screen-xl mx-auto h-full py-10 text-white bg-gray-800 bg-opacity-60 rounded-lg" xmlns:fifaplp="http://fifa24/player/pred/" xmlns:fifagg="http://fifa24/gender/guid/" xmlns:fifang="http://fifa24/nationality/guid/" xmlns:fifatg="http://fifa24/team/guid/" xmlns:fifatp="http://fifa24/team/pred/" typeof="fifaplp:Player">
+    <div class="flex max-w-screen-xl mx-auto h-full py-10 text-white bg-gray-800 bg-opacity-60 rounded-lg" xmlns:fifaplp="http://fifa24/player/pred/" xmlns:fifaplg="http://fifa24/player/guid/" xmlns:fifagg="http://fifa24/gender/guid/" xmlns:fifang="http://fifa24/nationality/guid/" xmlns:fifatg="http://fifa24/team/guid/" xmlns:fifatp="http://fifa24/team/pred/" typeof="fifaplp:Player" about="fifaplg:{{ player.playerid }}">
         <div class="border-r-2 border-gray-900 px-5">
             <div class="flex flex-col pb-5">
                 <img src="{{ player.card }}" alt="{{ player.name }}" class="w-72 object-contain" property="fifaplp:shieldUrl">
@@ -104,7 +104,7 @@
                 </div>
             </div>
         </div>
-        <div class="flex flex-col w-full h-max" rel="fifaplp:Stats" >
+        <div class="flex flex-col w-full h-max" rel="fifaplp:Stats">
             <div class="flex mb-10" >
                 <div class="mx-5 w-full justify-center">
                     <div class="flex pb-2 justify-center">
@@ -563,7 +563,7 @@
                 </div>
             </div>
             
-            <div class="flex felx-col text-white w-full h-full p-10 justify-evenly" rel="fifaplp:Extra" typeof="fifaplp:Extra">
+            <div class="flex felx-col text-white w-full h-full p-10 justify-evenly" rel="fifaplp:Wikidata" typeof="fifaplp:Wikidata">
                 {% for team in extra %}
                 <a href="{{ team.team_url }}">
                     <div class="flex flex-col items-center w-20 cursor">
