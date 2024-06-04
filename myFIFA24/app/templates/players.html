@@ -128,24 +128,26 @@
             <th class="px-2 py-2 text-center">PHY</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody xmlns:fifaplp="http://fifa24/player/pred/" xmlns:fifaplg:"http://fifa24/player/guid/" xmlns:fifatp="http://fifa24/team/pred/">
           {% for player in players %}
-          <tr class="{{ forloop.counter|divisibleby:'2'|yesno:'bg-gray-700,bg-gray-800' }} border-y-2">
+          <tr class="{{ forloop.counter|divisibleby:'2'|yesno:'bg-gray-700,bg-gray-800' }} border-y-2" >
             <td class="p-2 text-center">
-              <a href="/player/{{ player.id }}">
-                <img src="{{ player.image }}" alt="{{ player.name }}" class="h-12 object-contain" />
+              <a href="/player/{{ player.id }}" typeof="fifaplp:Player">
+                <img src="{{ player.image }}" alt="{{ player.name }}" class="h-12 object-contain" property="fifaplp:avatarUrl"/>
               </a>
             </td>
             <!-- The "Name" column is now the search bar -->
             <td class="px-2 py-2 text-center">
               <a href="/player/{{ player.id }}">
-                {{ player.name }}
+                <span property="fifaplp:name">{{ player.name }}</span>
               </a>
               </td>
             <td class="px-2 py-2 text-center">
-              <a href="/team/{{ player.teamid }}">
-                <img src="{{ player.logo }}" class="w-14 h-12 object-contain mx-auto" title="{{ player.team }}" />
-              </a>
+              <span property="fifatp:team">
+                <a href="/team/{{ player.teamid }}">
+                  <img src="{{ player.logo }}" class="w-14 h-12 object-contain mx-auto" title="{{ player.team }}" />
+                </a>
+              </span>
             </td>
             <td class="px-2 py-2 text-center">
               <img src="{{ player.flag }}" class="w-14 h-12 object-contain mx-auto" title="{{ player.nationality }}" />
