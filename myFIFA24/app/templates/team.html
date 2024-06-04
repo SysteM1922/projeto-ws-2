@@ -6,39 +6,39 @@
 
 {% include "navbar.html" %}
 
-<div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto py-10">
-    <div class="container flex justify-between mx-auto my-10 items-center h-96 text-white">
+<div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto py-10" xmlns:fifatp="http://fifa24/team/pred/"  xmlns:fifapl="http://fifa24/player/">"
+    <div class="container flex justify-between mx-auto my-10 items-center h-96 text-white" >
         <div class="h-full pr-5 w-1/2 border-r-2 flex flex-col items-center">
             <a href="{{ extra.stadium_url }}" class="flex flex-col h-full">
                 <div class="flex flex-col h-5/6 justify-center">
                     {% if extra.stadium_image %}
                     <img src="{{ extra.stadium_image }}" alt="{{ extra.stadium }}"
-                        class="rounded-2xl object-contain w-full h-full" />
+                        class="rounded-2xl object-contain w-full h-full" property="fifatp:stadiumImage" />
                     {% else %}
                     <img src="https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg"
-                        alt="{{ extra.stadium }}" class="rounded-2xl object-contain w-full h-full" />
+                        alt="{{ extra.stadium }}" class="rounded-2xl object-contain w-full h-full" property="fifatp:stadiumImage" />
                     {% endif %}
                 </div>
                 <div class="h-1/6 text-xl font-extrabold">
-                    <p class="text-center pt-5">
+                    <p class="text-center pt-5" property="fifatp:stadiumName">
                         {{ extra.stadium }} ({{ extra.capacity }} seats)
                     </p>
                 </div>
             </a>
         </div>
         <div class="h-full pl-5 w-1/2 border-l-2 flex flex-col items-center">
-            <a href="{{ extra.coach_url }}" class="flex flex-col h-full">
+            <a href="{{ extra.coach_url }}" class="flex flex-col h-full" property="fifapl:coach">
                 <div class="flex h-5/6">
                     {% if extra.coach_image %}
                     <img src="{{ extra.coach_image }}" alt="{{ extra.coach }}"
-                        class="rounded-2xl object-contain w-full h-full" />
+                        class="rounded-2xl object-contain w-full h-full" property="fifapl:coachImage" />
                     {% else %}
                     <img src="https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg"
-                        alt="{{ extra.coach }}" class="rounded-2xl object-contain w-full h-full" />
+                        alt="{{ extra.coach }}" class="rounded-2xl object-contain w-full h-full" property="fifapl:coachImage" />
                     {% endif %}
                 </div>
                 <div class="h-1/6 text-xl font-extrabold">
-                    <p class="text-center pt-5">
+                    <p class="text-center pt-5" property="fifapl:coachName">
                         {{ extra.coach }}
                     </p>
                 </div>
@@ -67,21 +67,23 @@
             </thead>
             <tbody>
                 {% for player in players %}
-                <tr class="{{ forloop.counter|divisibleby:'2'|yesno:'bg-gray-700,bg-gray-800' }} border-y-2">
+                <tr class="{{ forloop.counter|divisibleby:'2'|yesno:'bg-gray-700,bg-gray-800' }} border-y-2" typeof="fifapl:guid/Player">
                     <td class="p-2 text-center">
-                        <a href="/player/{{ player.id }}">
-                            <img src="{{ player.image }}" alt="{{ player.name }}" class="h-12 object-contain" />
+                        <a href="/player/{{ player.id }}" property="fifapl:pred/avatarURL">
+                            <img src="{{ player.image }}" alt="{{ player.name }}" class="h-12 object-contain" property="fifapl:pred/avatarURL"/>
                         </a>
                     </td>
                     <!-- The "Name" column is now the search bar -->
                     <td class="px-2 py-2 text-center">
-                        <a href="/player/{{ player.id }}">
-                            {{ player.name }}
-                        </a>
+                        <span property="fifapl:pred/name">
+                            <a href="/player/{{ player.id }}">
+                              {{ player.name }}
+                            </a>
+                          </span>
                     </td>
                     <td class="px-2 py-2 text-center">
                         <img src="{{ player.flag }}" class="w-14 h-12 object-contain mx-auto"
-                            title="{{ player.nationality }}" />
+                            title="{{ player.nationality }}" property="fifapl:pred/flag"/>
                     </td>
                     <td class="p-2 text-center">{{ player.ovr }}</td>
                     <td class="p-2 text-center">{{ player.position }}</td>
