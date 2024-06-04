@@ -45,6 +45,7 @@ fifagg:Gender a rdfs:Class ;
 fifagg:Male a owl:Class ;
     rdfs:label "Men's Football"@en ;
     fifagp:shortLabel "Man"@en ;
+    rdfs:subClassOf fifagg:Gender ;
     owl:equivalentClass [ a owl:Restriction ;
         owl:onProperty fifaplp:gender ;
         owl:hasValue fifagg:0 ;
@@ -53,6 +54,7 @@ fifagg:Male a owl:Class ;
 fifagg:Female a owl:Class ;
     rdfs:label "Women's Football"@en ;
     fifagp:shortLabel "Woman"@en ;
+    rdfs:subClassOf fifagg:Gender ;
     owl:equivalentClass [ a owl:Restriction ;
         owl:onProperty fifaplp:gender ;
         owl:hasValue fifagg:1
@@ -83,13 +85,9 @@ fifasqg:Squad rdfs:subClassOf foaf:Group .
 
 fifatg:Team rdfs:subClassOf foaf:Group .
 
-fifalg:Team rdfs:subClassOf foaf:Organization .
+fifatg:Team rdfs:subClassOf foaf:Organization .
 
 fifalg:League rdfs:subClassOf foaf:Organization .
-
-fifagg:Male rdfs:subClassOf fifagg:Gender .
-
-fifagg:Female rdfs:subClassOf fifagg:Gender .
 
 ###################### DisjointClasses ######################
 
@@ -97,10 +95,21 @@ fifagg:Female owl:disjointWith fifagg:Male .
 
 ###################### ObjectProperties ######################
 
+fifarel:teammate a owl:ObjectProperty ;
+    rdfs:label "teammate"@en ;
+    a owl:TransitiveProperty ;
+    a owl:SymmetricProperty ;
+    rdfs:domain fifaplg:Player ;
+    rdfs:range fifaplg:Player .
+
 fifaplp:team a owl:ObjectProperty ;
     rdfs:label "team"@en ;
     rdfs:domain fifaplg:Player ;
     rdfs:range fifatg:Team .
+
+fifaplp:playsFor a owl:ObjectProperty ;
+    rdfs:label "playsFor"@en ;
+    owl:equivalentProperty fifaplp:team .
 
 fifatp:league a owl:ObjectProperty ;
     rdfs:label "league"@en ;
@@ -141,6 +150,16 @@ fifaplp:altPos a owl:ObjectProperty ;
     rdfs:label "altPos"@en ;
     rdfs:domain fifaplg:Player ;
     rdfs:range fifapog:Position .
+
+fifalp:gender a owl:ObjectProperty ;
+    rdfs:label "gender"@en ;
+    rdfs:domain fifalg:League ;
+    rdfs:range fifagg:Gender .
+
+fifatp:gender a owl:ObjectProperty ;
+    rdfs:label "gender"@en ;
+    rdfs:domain fifatg:Team ;
+    rdfs:range fifagg:Gender .
 
 ###################### DataProperties ######################
 
