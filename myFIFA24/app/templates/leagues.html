@@ -13,12 +13,12 @@
                 onkeypress="if (event.keyCode == 13) { submitForm(); }">
         </form>
     </div>
-    <div class="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-5 w-full">
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-5 w-full" xmlns:fifalp="http://fifa24/league/pred/">
         {% for league in leagues %}
         <a class="flex flex-col items-center justify-center space-y-4 bg-gray-800 bg-opacity-60 rounded-lg hover:cursor-pointer p-2"
-            href="/league/{{ league.id }}">
-            <h2 class="text-xl font-bold text-white">{{ league.label }}</h2>
-            <img src="{{ league.image }}" alt="{{ league.label }}" class="w-48 h-48">
+            href="/league/{{ league.id }}" resource="fifalp:league:{{ league.id }}" typeof="fifalp:League">
+            <h2 class="text-xl font-bold text-white" property="fifalp:label">{{ league.label }}</h2>
+            <img src="{{ league.image }}" alt="{{ league.label }}" class="w-48 h-48" property="fifalp:imageUrl">
         </a>
         {% endfor %}
     </div>
