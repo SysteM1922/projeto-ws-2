@@ -25,13 +25,25 @@
 ###################### Classes ######################
 
 fifaplg:Player a rdfs:Class ;
-    rdfs:label "Player"@en .
+    rdfs:label "Player"@en ;
+    rdfs:subClassOf [ a owl:Restriction ;
+        owl:onProperty fifaplp:gender ;
+        owl:maxCardinality "1"^^xsd:int
+    ] .
 
 fifatg:Team a rdfs:Class ;
-    rdfs:label "Team"@en .
+    rdfs:label "Team"@en ;
+    rdfs:subClassOf [ a owl:Restriction ;
+        owl:onProperty fifatp:gender ;
+        owl:maxCardinality "1"^^xsd:int
+    ] .
 
 fifalg:League a rdfs:Class ;
-    rdfs:label "League"@en .
+    rdfs:label "League"@en ;
+    rdfs:subClassOf [ a owl:Restriction ;
+        owl:onProperty fifalp:gender ;
+        owl:maxCardinality "1"^^xsd:int
+    ] .
 
 fifang:Nationality a rdfs:Class ;
     rdfs:label "Nationality"@en .
@@ -48,7 +60,7 @@ fifagg:Male a owl:Class ;
     rdfs:subClassOf fifagg:Gender ;
     owl:equivalentClass [ a owl:Restriction ;
         owl:onProperty fifaplp:gender ;
-        owl:hasValue fifagg:0 ;
+        owl:hasValue fifagg:0
     ] .
 
 fifagg:Female a owl:Class ;
@@ -97,7 +109,6 @@ fifagg:Female owl:disjointWith fifagg:Male .
 
 fifarel:teammate a owl:ObjectProperty ;
     rdfs:label "teammate"@en ;
-    a owl:TransitiveProperty ;
     a owl:SymmetricProperty ;
     rdfs:domain fifaplg:Player ;
     rdfs:range fifaplg:Player .

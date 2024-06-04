@@ -100,6 +100,7 @@
                 class="w-full px-4 py-2 text-white bg-gray-800 opacity-80 border-0 rounded-md" onchange="this.form.submit()" />
             </th>
             <th class="px-2 py-2 text-center">Team</th>
+            <th class="px-2 py-2 text-center">League</th>
             <th class="px-4 py-2 text-center">Nationality</th>
             <th class="px-4 py-2 text-center">
               <button id="ovr" class="text-white">
@@ -146,6 +147,13 @@
               <span property="fifatp:team">
                 <a href="/team/{{ player.teamid }}">
                   <img src="{{ player.logo }}" class="w-14 h-12 object-contain mx-auto" title="{{ player.team }}" />
+                </a>
+              </span>
+            </td>
+            <td class="px-2 py-2 text-center">
+              <span property="fifatp:league">
+                <a href="/league/{{ player.league }}">
+                  <img src="{{ player.leagueImg }}" class="w-14 h-12 object-contain mx-auto" title="{{ player.leagueName }}" />
                 </a>
               </span>
             </td>

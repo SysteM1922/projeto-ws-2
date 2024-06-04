@@ -100,8 +100,9 @@ def league_view(request, guid):
 @login_required(login_url='login')
 def team_view(request, guid):
     players = players_api.get_players_by_team_guid(guid)
+    gender = int(players[0]["gender"].split("/")[-1])
     team_name = teams_api.get_team_name_by_guid(guid)
-    extra_info = wikidata.get_team_info(team_name)
+    extra_info = wikidata.get_team_info(team_name, gender)
     return render(request, 'team.html', {"players": players, "extra": extra_info})
 
 @login_required(login_url='login')

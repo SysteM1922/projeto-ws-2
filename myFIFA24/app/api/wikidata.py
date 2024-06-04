@@ -3,12 +3,17 @@ from .cache import Cache
 
 sparql = SPARQLWrapper2("https://query.wikidata.org/sparql")
 
-def get_team_info(team_name):
+def get_team_info(team_name, gender):
+
+    wd = "Q476028"
+
+    if gender:
+        wd = "Q28140340"
 
     query=f"""
     SELECT DISTINCT ?item
     WHERE {{
-        ?item wdt:P31 wd:Q476028 .
+        ?item wdt:P31 wd:{wd} .
         ?item rdfs:label ?name .
         FILTER(CONTAINS(?name, "{team_name}"))
     }}
