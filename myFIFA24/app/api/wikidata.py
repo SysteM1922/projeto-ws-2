@@ -64,9 +64,14 @@ def get_team_info(team_name, gender):
         LIMIT 1
         """
 
-        sparql.setQuery(query_2)
+        try:
+            sparql.setQuery(query_2)
 
-        results = sparql.query().bindings[0]
+            results = sparql.query().bindings[0]
+
+        except:
+            results = {}
+        
 
     except IndexError:
         results = {}
@@ -140,7 +145,7 @@ def get_player_info(player_name):
         team_urls = []
 
         for result in results:
-            if "national" not in result["teamName"].value.lower() and "national" not in result["teamName"].value.lower():
+            if "national" not in result["teamName"].value.lower() and "olympic" not in result["teamName"].value.lower():
                 team_names.append(result["teamName"].value)
                 team_imgs.append(result["teamImg"].value if "teamImg" in result else None)
                 team_urls.append(result["team"].value)

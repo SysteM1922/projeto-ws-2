@@ -6,46 +6,54 @@
 
 {% include "navbar.html" %}
 
-<div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto py-10" xmlns:fifatp="http://fifa24/team/pred/"  xmlns:fifapl="http://fifa24/player/" rel="fifatp:team" about="{{ team.id }}">
-    <div class="container flex justify-between mx-auto my-10 items-center h-96 text-white" >
+<div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto py-10" property="http://fifa24/team/"
+    typeof="http://fifa24/team/" about="http://fifa24/team/guid/{{ team }}" xmlns:fifat="http://fifa24/team/">
+    <div class="container flex justify-between mx-auto my-10 items-center h-96 text-white"
+        xmlns:fifawd="fifat:wikidata/" property="fifat:wikidata" typeof="fifat:wikidata">
         <div class="h-full pr-5 w-1/2 border-r-2 flex flex-col items-center">
-            <a href="{{ extra.stadium_url }}" class="flex flex-col h-full">
+            <a href="{{ extra.stadium_url }}" class="flex flex-col h-full" rel="fifawd:stadium" typeof="fifawd:stadium">
                 <div class="flex flex-col h-5/6 justify-center">
                     {% if extra.stadium_image %}
                     <img src="{{ extra.stadium_image }}" alt="{{ extra.stadium }}"
-                        class="rounded-2xl object-contain w-full h-full" property="fifatp:stadiumImage" />
+                        class="rounded-2xl object-contain w-full h-full" property="fifawd:stadium/stadiumImage" />
                     {% else %}
                     <img src="https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg"
-                        alt="{{ extra.stadium }}" class="rounded-2xl object-contain w-full h-full" property="fifatp:stadiumImage" />
+                        alt="{{ extra.stadium }}" class="rounded-2xl object-contain w-full h-full"
+                        property="fifawd:stadium/stadiumImage" />
                     {% endif %}
                 </div>
                 <div class="h-1/6 text-xl font-extrabold">
-                    <p class="text-center pt-5" property="fifatp:stadiumName">
-                        {{ extra.stadium }} ({{ extra.capacity }} seats)
+                    <p class="text-center pt-5" property="fifawd:stadium/stadiumName">
+                        {{ extra.stadium }}
+                        <span property="fifawd:stadium/capacity">
+                            ({{ extra.capacity }} seats)
+                        </span>
                     </p>
                 </div>
             </a>
         </div>
-        <div class="h-full pl-5 w-1/2 border-l-2 flex flex-col items-center" property="fifatp:coach">
-            <a href="{{ extra.coach_url }}" class="flex flex-col h-full" property="fifatp:coach">
+        <div class="h-full pl-5 w-1/2 border-l-2 flex flex-col items-center" property="fifawd:coach"
+            typeof="fifawd:coach">
+            <a href="{{ extra.coach_url }}" class="flex flex-col h-full" property="fifawd:coach/coachUrl">
                 <div class="flex h-5/6">
                     {% if extra.coach_image %}
                     <img src="{{ extra.coach_image }}" alt="{{ extra.coach }}"
-                        class="rounded-2xl object-contain w-full h-full" property="fifapl:coachImage" />
+                        class="rounded-2xl object-contain w-full h-full" property="fifawd:coach/coachImage" />
                     {% else %}
                     <img src="https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg"
-                        alt="{{ extra.coach }}" class="rounded-2xl object-contain w-full h-full" property="fifapl:coachImage" />
+                        alt="{{ extra.coach }}" class="rounded-2xl object-contain w-full h-full"
+                        property="fifawd:coach/coachImage" />
                     {% endif %}
                 </div>
                 <div class="h-1/6 text-xl font-extrabold">
-                    <p class="text-center pt-5" property="fifapl:coachName">
+                    <p class="text-center pt-5" property="fifawd:coach/coachName">
                         {{ extra.coach }}
                     </p>
                 </div>
             </a>
         </div>
     </div>
-    <div class="container mx-auto h-10">
+    <div class="container mx-auto h-10" xmlns:fifapls="fifat:players/" rel="fifat:players" typeof="fifat:players">
         <table class="table-auto w-full text-white bg-gray-800 opacity-80">
             <thead>
                 <tr>
@@ -67,53 +75,54 @@
             </thead>
             <tbody>
                 {% for player in players %}
-                <tr class="{{ forloop.counter|divisibleby:'2'|yesno:'bg-gray-700,bg-gray-800' }} border-y-2" typeof="fifapl:guid/Player">
+                <tr class="{{ forloop.counter|divisibleby:'2'|yesno:'bg-gray-700,bg-gray-800' }} border-y-2"
+                    property="fifat:players/player" typeof="fifat:players/player" about="fifapl:guid/{{ player.id }}"
+                    xlmns:fifapl="fifapls:player/">
                     <td class="p-2 text-center">
-                        <a href="/player/{{ player.id }}" property="fifapl:pred/avatarURL">
-                            <img src="{{ player.image }}" alt="{{ player.name }}" class="h-12 object-contain" property="fifapl:pred/avatarURL"/>
+                        <a href="/player/{{ player.id }}">
+                            <img src="{{ player.image }}" alt="{{ player.name }}" class="h-12 object-contain"
+                                property="fifapl:playerImage" />
                         </a>
                     </td>
-                    <!-- The "Name" column is now the search bar -->
                     <td class="px-2 py-2 text-center">
-                        <span property="fifapl:pred/name">
-                            <a href="/player/{{ player.id }}">
-                              {{ player.name }}
-                            </a>
-                          </span>
+                        <a href="/player/{{ player.id }}" class="text-white">
+                            <span property="fifapl:playerName">{{ player.name }}</span>
+                        </a>
                     </td>
                     <td class="px-2 py-2 text-center">
                         <img src="{{ player.flag }}" class="w-14 h-12 object-contain mx-auto"
-                            title="{{ player.nationality }}" property="fifapl:pred/flag"/>
+                            title="{{ player.nationality }}" property="fifapl:flag" />
                     </td>
-                    <td class="p-2 text-center" property="fifapl:pred/ovr">{{ player.ovr }}</td>
-                    <td class="p-2 text-center" property="fifapl:pred/position">{{ player.position }}</td>
+                    <td class="p-2 text-center" property="fifapl:ovr">{{ player.ovr }}</td>
+                    <td class="p-2 text-center" property="fifapl:position">{{ player.position }}</td>
                     <td class="p-2 text-center">
-                        <div class="flex text-center mx-auto w-max" property="fifapl:pred/skills">
-                            {{ player.skills }}<svg class="w-6 h-6 text-white" aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
-                                viewBox="0 0 24 24">
+                        <div class="flex text-center mx-auto w-max">
+                            <span property="fifapl:skills">{{ player.skills }}</span><svg class="w-6 h-6 text-white"
+                                aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                fill="currentColor" viewBox="0 0 24 24">
                                 <path
                                     d="M13.849 4.22c-.684-1.626-3.014-1.626-3.698 0L8.397 8.387l-4.552.361c-1.775.14-2.495 2.331-1.142 3.477l3.468 2.937-1.06 4.392c-.413 1.713 1.472 3.067 2.992 2.149L12 19.35l3.897 2.354c1.52.918 3.405-.436 2.992-2.15l-1.06-4.39 3.468-2.938c1.353-1.146.633-3.336-1.142-3.477l-4.552-.36-1.754-4.17Z" />
                             </svg>
                         </div>
                     </td>
                     <td class="p-2 text-center">
-                        <div class="flex text-center mx-auto w-max" property="fifapl:pred/weakfoot">
-                            {{ player.weakfoot }}<svg class="w-6 h-6 text-white" aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
-                                viewBox="0 0 24 24">
+                        <div class="flex text-center mx-auto w-max">
+                            <span property="fifapl:weakFoot">{{ player.weakfoot }}</span><svg class="w-6 h-6 text-white"
+                                aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                fill="currentColor" viewBox="0 0 24 24">
                                 <path
                                     d="M13.849 4.22c-.684-1.626-3.014-1.626-3.698 0L8.397 8.387l-4.552.361c-1.775.14-2.495 2.331-1.142 3.477l3.468 2.937-1.06 4.392c-.413 1.713 1.472 3.067 2.992 2.149L12 19.35l3.897 2.354c1.52.918 3.405-.436 2.992-2.15l-1.06-4.39 3.468-2.938c1.353-1.146.633-3.336-1.142-3.477l-4.552-.36-1.754-4.17Z" />
                             </svg>
                         </div>
                     </td>
-                    <td class="px-2 text-center" property="fifapl:pred/workrate"> {{ player.attwr|compute_wr }}\{{ player.defwr|compute_wr }}</td>
-                    <td class="px-2 text-center" property="fifapl:pred/pac">{{ player.stats.pac }}</td>
-                    <td class="px-2 text-center" property="fifapl:pred/sho">{{ player.stats.sho }}</td>
-                    <td class="px-2 text-center" property="fifapl:pred/pas">{{ player.stats.pas }}</td>
-                    <td class="px-2 text-center" property="fifapl:pred/dri">{{ player.stats.dri }}</td>
-                    <td class="px-2 text-center" property="fifapl:pred/def">{{ player.stats.def }}</td>
-                    <td class="px-2 text-center" property="fifapl:pred/phy">{{ player.stats.phy }}</td>
+                    <td class="px-2 text-center"><span property="fifapl:attwr">{{ player.attwr|compute_wr}}</span>
+                        \<span property="defwr">{{ player.defwr|compute_wr }}</span></td>
+                    <td class="px-2 text-center" property="fifapl:pac">{{ player.stats.pac }}</td>
+                    <td class="px-2 text-center" property="fifapl:sho">{{ player.stats.sho }}</td>
+                    <td class="px-2 text-center" property="fifapl:pas">{{ player.stats.pas }}</td>
+                    <td class="px-2 text-center" property="fifapl:dri">{{ player.stats.dri }}</td>
+                    <td class="px-2 text-center" property="fifapl:def">{{ player.stats.def }}</td>
+                    <td class="px-2 text-center" property="fifapl:phy">{{ player.stats.phy }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

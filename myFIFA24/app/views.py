@@ -103,7 +103,7 @@ def team_view(request, guid):
     gender = int(players[0]["gender"].split("/")[-1])
     team_name = teams_api.get_team_name_by_guid(guid)
     extra_info = wikidata.get_team_info(team_name, gender)
-    return render(request, 'team.html', {"players": players, "extra": extra_info})
+    return render(request, 'team.html', {"players": players, "extra": extra_info, "team": guid})
 
 @login_required(login_url='login')
 def players_view(request):
@@ -246,7 +246,6 @@ def delete_squad(request, guid):
 @login_required(login_url='login')  
 def squads_by_user(request):
     squads = squads_api.get_squads_by_user_id(request.user.id)
-    print(squads)
     return render(request, 'squads.html', {'squads': squads})
 
 

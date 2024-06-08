@@ -32,7 +32,7 @@ def get_genders() -> list[dict]:
 
         SELECT ?gender ?label
         WHERE {
-            ?gender fifagp:label ?label .
+            ?gender fifagp:shortLabel ?label .
         }
         ORDER BY ?label
         """
@@ -96,7 +96,7 @@ def get_positions() -> list[dict]:
 def get_total_players(props: dict = None) -> int:
 
     name = ""
-    gender = ""
+    gender = "?playerid a fifaplg:Player ."
     nationality = ""
     team = ""
     position = ""
@@ -114,7 +114,7 @@ def get_total_players(props: dict = None) -> int:
                 case "team":
                     team = f'FILTER(?teamid = fifatg:{prop["value"]})'
                 case "gender":
-                    gender = f'FILTER(?genderid = fifagg:{prop["value"]})'
+                    gender = f'?playerid a fifagg:{prop["value"]} .'
                 case "position":
                     position = f'FILTER(?positionid = fifapog:{prop["value"]})'
                     extra_position = f"""UNION {{
@@ -126,6 +126,7 @@ def get_total_players(props: dict = None) -> int:
 
     query = f"""
         PREFIX fifaplp: <http://fifa24/player/pred/>
+        PREFIX fifaplg: <http://fifa24/player/guid/>
         PREFIX fifang: <http://fifa24/nationality/guid/>
         PREFIX fifalg: <http://fifa24/league/guid/>
         PREFIX fifatg: <http://fifa24/team/guid/>
@@ -135,7 +136,6 @@ def get_total_players(props: dict = None) -> int:
         SELECT (COUNT(?playerid) AS ?total)
         WHERE {{
             {{
-            ?playerid fifaplp:gender ?genderid .
             {gender}
             ?playerid fifaplp:position ?positionid .
             {position}
@@ -160,7 +160,7 @@ def get_players_by_prop(start: int = 0, limit: int = 30, props: dict = None) -> 
 
     order = "DESC(?ovr) ?name"
     name = ""
-    gender = ""
+    gender = "?playerid a fifaplg:Player ."
     nationality = ""
     team = ""
     position = ""
@@ -178,10 +178,11 @@ def get_players_by_prop(start: int = 0, limit: int = 30, props: dict = None) -> 
                 case "team":
                     team = f'FILTER(?teamid = fifatg:{prop["value"]})'
                 case "gender":
-                    gender = f'FILTER(?genderid = fifagg:{prop["value"]})'
+                    gender = f'?playerid a fifagg:{prop["value"]} .'
                 case "position":
                     position = f'FILTER(?positionid = fifapog:{prop["value"]})'
                     extra_position = f"""UNION {{
+                    ?playerid a fifaplp:Player .
                     ?playerid fifaplp:gender ?genderid .
                     ?genderid fifagp:label ?gender .
                     ?playerid fifaplp:altPos fifapog:{prop["value"]} .
@@ -216,6 +217,7 @@ def get_players_by_prop(start: int = 0, limit: int = 30, props: dict = None) -> 
                         order = f"{signal}(?{ord}) DESC(?ovr) ?name"
 
     query = f"""
+        PREFIX fifaplg: <http://fifa24/player/guid/>
         PREFIX fifaplp: <http://fifa24/player/pred/>
         PREFIX fifang: <http://fifa24/nationality/guid/>
         PREFIX fifanp: <http://fifa24/nationality/pred/>
@@ -231,8 +233,8 @@ def get_players_by_prop(start: int = 0, limit: int = 30, props: dict = None) -> 
         SELECT ?playerid ?name ?flag ?nationality ?league ?leagueName ?leagueImg ?teamid ?team ?logo ?position ?ovr ?gender ?image ?skills ?weakfoot ?attwr ?defwr (CONCAT("{{",GROUP_CONCAT(?stat; separator=", "), "}}") AS ?stats)
         WHERE {{
             {{
-            ?playerid fifaplp:gender ?genderid .
             {gender}
+            ?playerid fifaplp:gender ?genderid .
             ?genderid fifagp:label ?gender .
             ?playerid fifaplp:position ?positionid .
             {position}
